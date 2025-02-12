@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 import pytest
 from selenium import webdriver
 
@@ -56,3 +58,18 @@ def test_driver(browser_name, browser_option):
     yield driver
 
     driver.quit()
+
+
+@pytest.fixture()
+def user_credentials():
+    User = namedtuple("User", ["username", "password"])
+    user = User(username="abc_12", password="abc")
+
+    return user
+
+
+@pytest.fixture()
+def base_url():
+    base_url = "https://www.demoblaze.com/"
+
+    return base_url
