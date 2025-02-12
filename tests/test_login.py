@@ -1,14 +1,14 @@
 from pages.login_page import LoginPage
 
 
-def test_login_valid_credentials(firefox_browser):
+def test_login_valid_credentials(test_driver):
     url = "https://www.demoblaze.com/index.html"
     username = "abc_12"
     password = "abc"
 
-    login_page = LoginPage(firefox_browser)
+    login_page = LoginPage(test_driver)
 
-    firefox_browser.get(url)
+    test_driver.get(url)
     login_page.get_log_in_modal()
     login_page.log_in(username=username, password=password)
     logged_in_user = login_page.get_logged_in_user()
@@ -16,14 +16,14 @@ def test_login_valid_credentials(firefox_browser):
     assert logged_in_user.text == f"Welcome {username}"
 
 
-def test_log_out(firefox_browser):
+def test_log_out(test_driver):
     url = "https://www.demoblaze.com/index.html"
     username = "abc_12"
     password = "abc"
 
-    login_page = LoginPage(firefox_browser)
+    login_page = LoginPage(test_driver)
 
-    firefox_browser.get(url)
+    test_driver.get(url)
     login_page.get_log_in_modal()
     login_page.log_in(username=username, password=password)
     logged_in_user = login_page.get_logged_in_user()

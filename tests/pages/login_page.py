@@ -16,6 +16,7 @@ class LoginPage(BasePage):
         super().__init__(driver)
 
     def get_log_in_modal(self):
+        self.is_element_visible((By.ID, "navbarExample"))
         log_in_button = self.driver.find_element(*self.NAVIGATION_LOG_IN)
         log_in_button.click()
         self.is_element_visible(self.LOG_IN_MODAL)
