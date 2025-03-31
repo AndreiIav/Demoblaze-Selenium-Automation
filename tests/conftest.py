@@ -17,6 +17,15 @@ def pytest_addoption(parser):
         "--headless", action="store_true", help="Run browser in headless mode"
     )
 
+    parser.addoption(
+        "--selenium_grid", action="store_true", help="Run tests on Selenium Grid"
+    )
+
+
+@pytest.fixture(scope="session")
+def run_on_selenium_grid(request):
+    return request.config.getoption("--selenium_grid")
+
 
 @pytest.fixture(scope="session")
 def browser_name(request):
@@ -47,13 +56,22 @@ def browser_option(browser_name, is_headeless):
 
 
 @pytest.fixture()
-def test_driver(browser_name, browser_option):
-    if browser_name == "chrome":
-        driver = webdriver.Chrome(options=browser_option)
-    elif browser_name == "firefox":
-        driver = webdriver.Firefox(options=browser_option)
+def test_driver(browser_name, browser_option, run_on_selenium_grid):
+    if run_on_selenium_grid:
+        if browser_name == "chrome":
+            driver = webdriver.Remote("http://localhost:4444", options=browser_option)
+        elif browser_name == "firefox":
+            driver = webdriver.Remote("http://localhost:4444", options=browser_option)
+        else:
+            raise ValueError(f"Unsupported browser: {browser_name}")
+
     else:
-        raise ValueError(f"Unsupported browser: {browser_name}")
+        if browser_name == "chrome":
+            driver = webdriver.Chrome(options=browser_option)
+        elif browser_name == "firefox":
+            driver = webdriver.Firefox(options=browser_option)
+        else:
+            raise ValueError(f"Unsupported browser: {browser_name}")
 
     yield driver
 
@@ -64,12 +82,10 @@ def test_driver(browser_name, browser_option):
 def user_credentials():
     User = namedtuple("User", ["username", "password"])
     user = User(username="abc_12", password="abc")
-
     return user
 
 
 @pytest.fixture()
 def base_url():
     base_url = "https://www.demoblaze.com/"
-
     return base_url
