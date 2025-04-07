@@ -21,13 +21,16 @@ class LoginPage(BasePage):
         log_in_button.click()
         self.is_element_visible(self.LOG_IN_MODAL)
 
-    def log_in(self, username, password):
+    def set_username(self, username):
         username_box = self.driver.find_element(*self.USERNAME)
-        password_box = self.driver.find_element(*self.PASSWORD)
-        log_in_button = self.driver.find_element(*self.MODAL_LOG_IN_BUTTON)
-
         username_box.send_keys(username)
+
+    def set_password(self, password):
+        password_box = self.driver.find_element(*self.PASSWORD)
         password_box.send_keys(password)
+
+    def click_log_in(self):
+        log_in_button = self.driver.find_element(*self.MODAL_LOG_IN_BUTTON)
         log_in_button.click()
 
     def get_logged_in_user(self):
@@ -37,6 +40,12 @@ class LoginPage(BasePage):
         logged_in_user = self.driver.find_element(*self.LOGGED_IN_USER)
 
         return logged_in_user
+
+    def login(self, username, password):
+        self.get_log_in_modal()
+        self.set_username(username)
+        self.set_password(password)
+        self.click_log_in()
 
     def log_out(self):
         log_out_button = self.driver.find_element(*self.LOG_OUT)
