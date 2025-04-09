@@ -50,3 +50,19 @@ class LoginPage(BasePage):
     def log_out(self):
         log_out_button = self.driver.find_element(*self.LOG_OUT)
         log_out_button.click()
+
+
+class Alert(BasePage):
+    def __init__(self, driver):
+        super().__init__(driver)
+
+    def get_text_of_alert(self, alert):
+        return alert.text
+
+    def alert_accept(self, alert):
+        alert.accept()
+
+    def get_alert_text(self):
+        alert = self.get_alert()
+        alert_text = self.get_text_of_alert(alert)
+        return alert_text
