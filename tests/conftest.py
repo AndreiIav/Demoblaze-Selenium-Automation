@@ -58,9 +58,7 @@ def browser_option(browser_name, is_headeless):
 @pytest.fixture()
 def test_driver(browser_name, browser_option, run_on_selenium_grid):
     if run_on_selenium_grid:
-        if browser_name == "chrome":
-            driver = webdriver.Remote("http://localhost:4444", options=browser_option)
-        elif browser_name == "firefox":
+        if browser_name in ("chrome", "firefox"):
             driver = webdriver.Remote("http://localhost:4444", options=browser_option)
         else:
             raise ValueError(f"Unsupported browser: {browser_name}")
