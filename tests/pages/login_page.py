@@ -33,6 +33,14 @@ class LoginPage(BasePage):
         log_in_button = self.driver.find_element(*self.MODAL_LOG_IN_BUTTON)
         log_in_button.click()
 
+    def clear_username_box(self):
+        username_box = self.driver.find_element(*self.USERNAME)
+        username_box.clear()
+
+    def clear_password_box(self):
+        password_box = self.driver.find_element(*self.PASSWORD)
+        password_box.clear()
+
     def get_logged_in_user(self):
         self.is_text_present_in_element(
             locator=(self.LOGGED_IN_USER), text=self.WELCOME_USER_TEXT
@@ -42,7 +50,6 @@ class LoginPage(BasePage):
         return logged_in_user
 
     def login(self, username, password):
-        self.get_log_in_modal()
         self.set_username(username)
         self.set_password(password)
         self.click_log_in()
@@ -51,18 +58,11 @@ class LoginPage(BasePage):
         log_out_button = self.driver.find_element(*self.LOG_OUT)
         log_out_button.click()
 
-
-class Alert(BasePage):
-    def __init__(self, driver):
-        super().__init__(driver)
-
-    def get_text_of_alert(self, alert):
-        return alert.text
-
-    def alert_accept(self, alert):
-        alert.accept()
-
     def get_alert_text(self):
         alert = self.get_alert()
-        alert_text = self.get_text_of_alert(alert)
+        alert_text = alert.text
         return alert_text
+
+    def accept_alert(self):
+        alert = self.get_alert()
+        alert.accept()
