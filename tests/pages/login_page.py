@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 
 
 class LoginPage(BasePage):
-    NAVIGATION_LOG_IN = (By.ID, "login2")
     LOG_IN_MODAL = (By.ID, "logInModalLabel")
     USERNAME = (By.ID, "loginusername")
     PASSWORD = (By.ID, "loginpassword")
@@ -15,9 +14,7 @@ class LoginPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
 
-    def get_log_in_modal(self):
-        self.is_element_visible((By.ID, "navbarExample"))
-        log_in_button = self.driver.find_element(*self.NAVIGATION_LOG_IN)
+    def get_log_in_modal(self, log_in_button):
         log_in_button.click()
         self.is_element_visible(self.LOG_IN_MODAL)
 
