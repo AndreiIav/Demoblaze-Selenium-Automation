@@ -1,4 +1,6 @@
+import json
 from collections import namedtuple
+from dataclasses import dataclass
 
 import pytest
 from selenium import webdriver
@@ -87,3 +89,51 @@ def user_credentials():
 def base_url():
     base_url = "https://www.demoblaze.com/"
     return base_url
+
+
+@dataclass
+class Product:
+    category: str
+    name: str
+    link: str
+    price: float
+    description: str
+
+
+def get_json_data(json_file):
+    with open(json_file, "r") as f:
+        data = json.load(f)
+
+    return data
+
+
+@pytest.fixture
+def get_products_json_data():
+    expected_products = get_json_data(json_file="tests/products.json")
+    expected_products_data = {"phone": [], "laptop": [], "monitor": []}
+
+    for expected_product_name in expected_products_data:
+        category_products = {
+            name: details
+            for name, details in expected_products.items()
+            if details["category"] == expected_product_name
+        }
+
+        for name, value in category_products.items():
+            prod = Product(
+                category=value["category"],
+                name=name,
+                link=value["link"],
+                price=value["price"],
+                description=value["description"],
+            )
+            expected_products_data[expected_product_name].append(prod)
+
+    for product in expected_products_data:
+        expected_products_data[product].sort(key=lambda x: "name")
+
+    return (
+        expected_products_data["phone"],
+        expected_products_data["laptop"],
+        expected_products_data["monitor"],
+    )
