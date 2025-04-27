@@ -82,3 +82,40 @@ class ProductsPage(BasePage):
         )
         all_cards_descriptions = [card.text for card in all_description_elements]
         return all_cards_descriptions
+
+    def create_products_cards(
+        self,
+        all_cards,
+        all_image_links,
+        all_title_links,
+        all_card_titles,
+        all_card_prices,
+        all_card_descriptions,
+    ):
+        product_cards = []
+
+        for i in range(len(all_cards)):
+            card = ProductCard(
+                image_link=all_image_links[i],
+                title=all_card_titles[i],
+                title_link=all_title_links[i],
+                price=all_card_prices[i],
+                description=all_card_descriptions[i],
+            )
+            product_cards.append(card)
+
+        product_cards.sort(key=lambda x: "title")
+
+        return product_cards
+
+    def get_product_cards(self):
+        product_cards = self.create_products_cards(
+            all_cards=self.get_all_cards_on_page(),
+            all_image_links=self.get_all_cards_links(link_origin="card_image"),
+            all_title_links=self.get_all_cards_links(link_origin="card_title"),
+            all_card_titles=self.get_all_cards_titles(),
+            all_card_prices=self.get_all_cards_prices(),
+            all_card_descriptions=self.get_all_cards_descriptions(),
+        )
+
+        return product_cards

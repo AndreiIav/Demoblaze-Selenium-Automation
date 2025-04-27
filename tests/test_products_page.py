@@ -1,29 +1,4 @@
-from pages.products_page import ProductCard, ProductsPage
-
-
-def create_products_cards(
-    all_cards,
-    all_image_links,
-    all_title_links,
-    all_card_titles,
-    all_card_prices,
-    all_card_descriptions,
-):
-    product_cards = []
-
-    for i in range(len(all_cards)):
-        card = ProductCard(
-            image_link=all_image_links[i],
-            title=all_card_titles[i],
-            title_link=all_title_links[i],
-            price=all_card_prices[i],
-            description=all_card_descriptions[i],
-        )
-        product_cards.append(card)
-
-    product_cards.sort(key=lambda x: "title")
-
-    return product_cards
+from pages.products_page import ProductsPage
 
 
 def test_expected_phones_are_displayed(test_driver, base_url, get_products_json_data):
@@ -32,25 +7,9 @@ def test_expected_phones_are_displayed(test_driver, base_url, get_products_json_
     test_driver.get(base_url)
 
     products_page.click_categories_button(category_button="phones")
-
-    all_cards = products_page.get_all_cards_on_page()
-    all_image_links = products_page.get_all_cards_links(link_origin="card_image")
-    all_title_links = products_page.get_all_cards_links(link_origin="card_title")
-    all_card_titles = products_page.get_all_cards_titles()
-    all_card_prices = products_page.get_all_cards_prices()
-    all_card_descriptions = products_page.get_all_cards_descriptions()
-
-    product_cards = create_products_cards(
-        all_cards=all_cards,
-        all_image_links=all_image_links,
-        all_title_links=all_title_links,
-        all_card_titles=all_card_titles,
-        all_card_prices=all_card_prices,
-        all_card_descriptions=all_card_descriptions,
-    )
+    product_cards = products_page.get_product_cards()
 
     assert len(product_cards) == len(expected_phones_products)
-
     for i in range(len(product_cards)):
         assert product_cards[i].title == expected_phones_products[i].name
         assert product_cards[i].image_link == expected_phones_products[i].link
@@ -65,25 +24,9 @@ def test_expected_laptops_are_displayed(test_driver, base_url, get_products_json
     test_driver.get(base_url)
 
     products_page.click_categories_button(category_button="laptops")
-
-    all_cards = products_page.get_all_cards_on_page()
-    all_image_links = products_page.get_all_cards_links(link_origin="card_image")
-    all_title_links = products_page.get_all_cards_links(link_origin="card_title")
-    all_card_titles = products_page.get_all_cards_titles()
-    all_card_prices = products_page.get_all_cards_prices()
-    all_card_descriptions = products_page.get_all_cards_descriptions()
-
-    product_cards = create_products_cards(
-        all_cards=all_cards,
-        all_image_links=all_image_links,
-        all_title_links=all_title_links,
-        all_card_titles=all_card_titles,
-        all_card_prices=all_card_prices,
-        all_card_descriptions=all_card_descriptions,
-    )
+    product_cards = products_page.get_product_cards()
 
     assert len(product_cards) == len(expected_laptops_products)
-
     for i in range(len(product_cards)):
         assert product_cards[i].title == expected_laptops_products[i].name
         assert product_cards[i].image_link == expected_laptops_products[i].link
@@ -98,25 +41,9 @@ def test_expected_monitors_are_displayed(test_driver, base_url, get_products_jso
     test_driver.get(base_url)
 
     products_page.click_categories_button(category_button="monitors")
-
-    all_cards = products_page.get_all_cards_on_page()
-    all_image_links = products_page.get_all_cards_links(link_origin="card_image")
-    all_title_links = products_page.get_all_cards_links(link_origin="card_title")
-    all_card_titles = products_page.get_all_cards_titles()
-    all_card_prices = products_page.get_all_cards_prices()
-    all_card_descriptions = products_page.get_all_cards_descriptions()
-
-    product_cards = create_products_cards(
-        all_cards=all_cards,
-        all_image_links=all_image_links,
-        all_title_links=all_title_links,
-        all_card_titles=all_card_titles,
-        all_card_prices=all_card_prices,
-        all_card_descriptions=all_card_descriptions,
-    )
+    product_cards = products_page.get_product_cards()
 
     assert len(product_cards) == len(expected_monitors_products)
-
     for i in range(len(product_cards)):
         assert product_cards[i].title == expected_monitors_products[i].name
         assert product_cards[i].image_link == expected_monitors_products[i].link
