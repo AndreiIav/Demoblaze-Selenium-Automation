@@ -119,3 +119,22 @@ class ProductsPage(BasePage):
         )
 
         return product_cards
+
+    def get_product_card(self, product_name):
+        product_cards = self.create_products_cards(
+            all_cards=self.get_all_cards_on_page(),
+            all_image_links=self.get_all_cards_links(link_origin="card_image"),
+            all_title_links=self.get_all_cards_links(link_origin="card_title"),
+            all_card_titles=self.get_all_cards_titles(),
+            all_card_prices=self.get_all_cards_prices(),
+            all_card_descriptions=self.get_all_cards_descriptions(),
+        )
+
+        product = [card for card in product_cards if card.title == product_name]
+
+        return product[0]
+
+    def click_product_link(self, product_name):
+        product_link = self.is_element_visible((By.LINK_TEXT, product_name))
+        product_link = self.driver.find_element(By.LINK_TEXT, product_name)
+        product_link.click()
