@@ -4,30 +4,31 @@ from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 
 
-@dataclass
-class ProductCard:
-    image_link: str
-    title: str
-    title_link: str
-    price: float
-    description: str
-
-
 class ProductsPage(BasePage):
-    # Categories
+    # Categories buttons
     PHONES = (By.CSS_SELECTOR, "[onclick=\"byCat('phone')\"]")
     LAPTOPS = (By.CSS_SELECTOR, "[onclick=\"byCat('notebook')\"]")
     MONITORS = (By.CSS_SELECTOR, "[onclick=\"byCat('monitor')\"]")
 
-    # Cards
+    # Product cards
     CARD = (By.CLASS_NAME, "card")
     CARD_IMAGE_LINK = (By.CSS_SELECTOR, ".card > a")
-    CARD_PRODUCT_TITLE = (By.CLASS_NAME, "hrefch")
+    CARD_PRODUCT_TITLE = (By.CSS_SELECTOR, ".card-title > a")
     CARD_PRODUCT_PRICE = (By.CSS_SELECTOR, ".card-block > h5")
     CARD_PRODUCT_DESCRIPTION = (By.CLASS_NAME, "card-text")
 
     def __init__(self, driver):
         super().__init__(driver)
+
+    @dataclass
+    class ProductCard:
+        """Represents a product card with all its details"""
+
+        image_link: str
+        title: str
+        title_link: str
+        price: float
+        description: str
 
     def click_categories_button(self, category_button):
         if category_button == "phones":
@@ -48,7 +49,7 @@ class ProductsPage(BasePage):
         all_cards = self.driver.find_elements(*self.CARD)
         return all_cards
 
-    def get_all_cards_links(self, link_origin):
+    def get_card_link(self, card, link_origin):
         if link_origin == "card_image":
             link_selector = self.CARD_IMAGE_LINK
         elif link_origin == "card_title":
@@ -56,85 +57,76 @@ class ProductsPage(BasePage):
         else:
             raise ValueError(f"'{link_origin}' is not a valid link selector.")
 
-        self.is_element_visible(link_selector)
-        all_image_links = self.driver.find_elements(*link_selector)
-        all_cards_image_links = [
-            image_link.get_attribute("href") for image_link in all_image_links
-        ]
-        return all_cards_image_links
+        card_link = card.find_element(*link_selector)
+        card_link = card_link.get_attribute("href")
 
-    def get_all_cards_titles(self):
-        self.is_element_visible(self.CARD_PRODUCT_TITLE)
-        all_cards = self.driver.find_elements(*self.CARD_PRODUCT_TITLE)
-        all_card_titles = [card.text for card in all_cards]
-        return all_card_titles
+        return card_link
 
-    def get_all_cards_prices(self):
-        self.is_element_visible(self.CARD_PRODUCT_PRICE)
-        all_prices_elements = self.driver.find_elements(*self.CARD_PRODUCT_PRICE)
-        all_card_prices = [float(card.text[1:]) for card in all_prices_elements]
-        return all_card_prices
+    def get_card_title(self, card):
+        title = card.find_element(*self.CARD_PRODUCT_TITLE)
+        card_title = title.text
 
-    def get_all_cards_descriptions(self):
-        self.is_element_visible(self.CARD_PRODUCT_DESCRIPTION)
-        all_description_elements = self.driver.find_elements(
-            *self.CARD_PRODUCT_DESCRIPTION
-        )
-        all_cards_descriptions = [card.text for card in all_description_elements]
-        return all_cards_descriptions
+        return card_title
 
-    def create_products_cards(
-        self,
-        all_cards,
-        all_image_links,
-        all_title_links,
-        all_card_titles,
-        all_card_prices,
-        all_card_descriptions,
-    ):
-        product_cards = []
+    def get_card_price(self, card):
+        price = card.find_element(*self.CARD_PRODUCT_PRICE)
+        # remove the '$' sign and cast the value to a float
+        card_price = float(price.text[1:])
 
-        for i in range(len(all_cards)):
-            card = ProductCard(
-                image_link=all_image_links[i],
-                title=all_card_titles[i],
-                title_link=all_title_links[i],
-                price=all_card_prices[i],
-                description=all_card_descriptions[i],
-            )
-            product_cards.append(card)
+        return card_price
 
-        product_cards.sort(key=lambda x: "title")
+    def get_card_description(self, card):
+        description = card.find_element(*self.CARD_PRODUCT_DESCRIPTION)
+        card_description = description.text
 
-        return product_cards
-
-    def get_product_cards(self):
-        product_cards = self.create_products_cards(
-            all_cards=self.get_all_cards_on_page(),
-            all_image_links=self.get_all_cards_links(link_origin="card_image"),
-            all_title_links=self.get_all_cards_links(link_origin="card_title"),
-            all_card_titles=self.get_all_cards_titles(),
-            all_card_prices=self.get_all_cards_prices(),
-            all_card_descriptions=self.get_all_cards_descriptions(),
-        )
-
-        return product_cards
-
-    def get_product_card(self, product_name):
-        product_cards = self.create_products_cards(
-            all_cards=self.get_all_cards_on_page(),
-            all_image_links=self.get_all_cards_links(link_origin="card_image"),
-            all_title_links=self.get_all_cards_links(link_origin="card_title"),
-            all_card_titles=self.get_all_cards_titles(),
-            all_card_prices=self.get_all_cards_prices(),
-            all_card_descriptions=self.get_all_cards_descriptions(),
-        )
-
-        product = [card for card in product_cards if card.title == product_name]
-
-        return product[0]
+        return card_description
 
     def click_product_link(self, product_name):
         product_link = self.is_element_visible((By.LINK_TEXT, product_name))
         product_link = self.driver.find_element(By.LINK_TEXT, product_name)
         product_link.click()
+
+    def create_products_cards(self, cards):
+        """Creates ProductCard objects from the data passsed in cards argument"""
+        product_cards = []
+
+        for card in cards:
+            new_card = self.ProductCard(
+                title_link=self.get_card_link(card=card, link_origin="card_image"),
+                image_link=self.get_card_link(card=card, link_origin="card_title"),
+                title=self.get_card_title(card=card),
+                price=self.get_card_price(card=card),
+                description=self.get_card_description(card=card),
+            )
+            product_cards.append(new_card)
+
+        return product_cards
+
+    def get_all_product_cards(self):
+        """
+        Returns ProductCard objects.
+
+        This method returns a list of all ProductCard objects that can be created
+        with products data from a single products page.
+        """
+        all_cards_on_page = self.get_all_cards_on_page()
+        all_cards = self.create_products_cards(cards=all_cards_on_page)
+
+        return all_cards
+
+    def get_product_card(self, all_cards, product_name):
+        """
+        Returns a single ProductCard object or raises a LookupError if the name
+        is not found.
+
+        Args:
+            all_cards (list): A list of ProductCard objects.
+            product_name (str): The name of the product to be returned.
+        """
+        try:
+            card = next(c for c in all_cards if c.title == product_name)
+            return card
+        except StopIteration:
+            raise LookupError(
+                f"'{product_name}' product can not be found in all_cards."
+            )

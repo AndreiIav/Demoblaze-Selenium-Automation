@@ -21,7 +21,10 @@ def test_product_details_matches_card_details(
     test_product_name = product_name
 
     products_page.click_categories_button(category_button=product_category)
-    product_card = products_page.get_product_card(product_name=test_product_name)
+    all_product_cards = products_page.get_all_product_cards()
+    product_card = products_page.get_product_card(
+        all_cards=all_product_cards, product_name=test_product_name
+    )
     products_page.click_product_link(product_name=product_card.title)
 
     product_page_product_name = product_page.get_product_name()
@@ -33,7 +36,7 @@ def test_product_details_matches_card_details(
     assert product_card.description == product_page_product_description
 
 
-def test_product_add_to_cart(test_driver, base_url):
+def test_add_product_to_cart(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
     test_driver.get(base_url)
