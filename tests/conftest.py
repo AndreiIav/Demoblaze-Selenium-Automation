@@ -129,11 +129,4 @@ def get_products_json_data():
             )
             expected_products_data[expected_product_name].append(prod)
 
-    for product in expected_products_data:
-        expected_products_data[product].sort(key=lambda x: "name")
-
-    return (
-        expected_products_data["phone"],
-        expected_products_data["laptop"],
-        expected_products_data["monitor"],
-    )
+    return expected_products_data
