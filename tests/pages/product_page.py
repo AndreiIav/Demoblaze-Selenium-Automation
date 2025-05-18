@@ -13,13 +13,11 @@ class ProductPage(BasePage):
         super().__init__(driver)
 
     def get_product_name(self):
-        self.is_element_visible(self.PRODUCT_NAME)
-        product_name = self.driver.find_element(*self.PRODUCT_NAME)
-        return product_name.text
+        product_name = self.get_element_text(locator=self.PRODUCT_NAME)
+        return product_name
 
     def get_product_price(self):
-        self.is_element_visible(self.PRODUCT_PRICE)
-        product_price = self.driver.find_element(*self.PRODUCT_PRICE)
+        product_price = self.get_element(locator=self.PRODUCT_PRICE)
 
         # product_price is a string like '$360 *includes tax'
         # remove '$' and' *includes tax' from the price string and convert
@@ -28,13 +26,11 @@ class ProductPage(BasePage):
         return price
 
     def get_product_description(self):
-        self.is_element_visible(self.PRODUCT_DESCRIPTION)
-        product_description = self.driver.find_element(*self.PRODUCT_DESCRIPTION)
-        return product_description.text
+        product_description = self.get_element_text(locator=self.PRODUCT_DESCRIPTION)
+        return product_description
 
     def click_add_to_cart_button(self):
-        self.is_element_visible(self.ADD_TO_CART_BUTTON)
-        add_to_cart_button = self.driver.find_element(*self.ADD_TO_CART_BUTTON)
+        add_to_cart_button = self.get_element(self.ADD_TO_CART_BUTTON)
         add_to_cart_button.click()
 
     def get_alert_text(self):
