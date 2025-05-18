@@ -15,7 +15,7 @@ class ProductsPage(BasePage):
     CARD_IMAGE_LINK = (By.CSS_SELECTOR, ".card > a")
     CARD_PRODUCT_TITLE = (By.CSS_SELECTOR, ".card-title > a")
     CARD_PRODUCT_PRICE = (By.CSS_SELECTOR, ".card-block > h5")
-    CARD_PRODUCT_DESCRIPTION = (By.CLASS_NAME, "card-text")
+    CARD_PRODUCT_DESCRIPTION = (By.ID, "article")
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -40,13 +40,11 @@ class ProductsPage(BasePage):
         else:
             raise ValueError(f"'{category_button}' is not a valid categories button.")
 
-        self.is_element_visible(category_selector)
-        phones_button = self.driver.find_element(*category_selector)
+        phones_button = self.get_element(locator=category_selector)
         phones_button.click()
 
     def get_all_cards_on_page(self):
-        self.is_element_visible(self.CARD)
-        all_cards = self.driver.find_elements(*self.CARD)
+        all_cards = self.get_all_elements(self.CARD)
         return all_cards
 
     def get_card_link(self, card, link_origin):
@@ -57,33 +55,34 @@ class ProductsPage(BasePage):
         else:
             raise ValueError(f"'{link_origin}' is not a valid link selector.")
 
-        card_link = card.find_element(*link_selector)
-        card_link = card_link.get_attribute("href")
-
+        card_link = self.get_sub_element_attribute(
+            parent_element=card, locator=link_selector, attribute="href"
+        )
         return card_link
 
     def get_card_title(self, card):
-        title = card.find_element(*self.CARD_PRODUCT_TITLE)
-        card_title = title.text
-
+        card_title = self.get_sub_element_text(
+            parent_element=card,
+            locator=self.CARD_PRODUCT_TITLE,
+        )
         return card_title
 
     def get_card_price(self, card):
-        price = card.find_element(*self.CARD_PRODUCT_PRICE)
-        # remove the '$' sign and cast the value to a float
-        card_price = float(price.text[1:])
-
+        card_price = self.get_sub_element_text(
+            parent_element=card, locator=self.CARD_PRODUCT_PRICE
+        )
+        # remove the '$' sign and cast the string value to a float
+        card_price = float(card_price[1:])
         return card_price
 
     def get_card_description(self, card):
-        description = card.find_element(*self.CARD_PRODUCT_DESCRIPTION)
-        card_description = description.text
-
+        card_description = self.get_sub_element_text(
+            parent_element=card, locator=self.CARD_PRODUCT_DESCRIPTION
+        )
         return card_description
 
     def click_product_link(self, product_name):
-        product_link = self.is_element_visible((By.LINK_TEXT, product_name))
-        product_link = self.driver.find_element(By.LINK_TEXT, product_name)
+        product_link = self.get_element(locator=(By.LINK_TEXT, product_name))
         product_link.click()
 
     def create_products_cards(self, cards):
