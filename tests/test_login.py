@@ -33,7 +33,7 @@ def test_log_out(test_driver, user_credentials, base_url):
 
     login_page.log_out()
 
-    assert navbar_page.is_element_visible(navbar_page.LOG_IN_BUTTON)
+    assert navbar_page.check_if_element_is_visible(navbar_page.LOG_IN_BUTTON)
 
 
 def test_login_with_missing_credentials(test_driver, base_url):
