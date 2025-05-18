@@ -1,3 +1,4 @@
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -5,21 +6,44 @@ from selenium.webdriver.support.wait import WebDriverWait
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver=self.driver, timeout=10)
+        self.wait = WebDriverWait(
+            driver=self.driver,
+            timeout=10,
+            ignored_exceptions=[StaleElementReferenceException],
+        )
 
-    def is_element_visible(self, locator):
-        try:
-            self.wait.until(EC.visibility_of_all_elements_located(locator=locator))
-            return True
-        except Exception:
-            return False
+    def get_element(self, locator):
+        element = self.wait.until(EC.presence_of_element_located(locator))
+        return element
 
-    def is_text_present_in_element(self, locator, text):
-        try:
-            self.wait.until(EC.text_to_be_present_in_element((locator), text))
-            return True
-        except Exception:
-            return False
+    def get_element_text(self, locator):
+        element = self.wait.until(EC.presence_of_element_located(locator))
+        element_text = element.text
+        return element_text
+
+    def get_sub_element_attribute(self, parent_element, locator, attribute):
+        sub_element = self.wait.until(lambda d: parent_element.find_element(*locator))
+        sub_element_attribute = sub_element.get_attribute(attribute)
+        return sub_element_attribute
+
+    def get_sub_element_text(
+        self,
+        parent_element,
+        locator,
+    ):
+        sub_element = self.wait.until(lambda d: parent_element.find_element(*locator))
+        sub_element_text = sub_element.text
+        return sub_element_text
+
+    def get_all_elements(self, locator):
+        all_elements = self.wait.until(EC.presence_of_all_elements_located(locator))
+        return all_elements
+
+    def check_if_element_is_visible(self, locator) -> bool:
+        return self.wait.until(EC.visibility_of_element_located(locator=locator))
+
+    def check_if_text_is_present_in_element(self, locator, text):
+        self.wait.until(EC.text_to_be_present_in_element((locator), text))
 
     def get_alert(self):
         try:
