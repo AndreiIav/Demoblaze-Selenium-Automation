@@ -21,6 +21,5 @@ class NavbarPage(BasePage):
         super().__init__(driver)
 
     def get_log_in_button(self):
-        self.is_element_visible(self.NAVBAR)
-        log_in_button = self.driver.find_element(*self.LOG_IN_BUTTON)
+        log_in_button = self.get_element(self.LOG_IN_BUTTON)
         return log_in_button
