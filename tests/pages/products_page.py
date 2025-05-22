@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from pages.base_page import BasePage
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
 
 
@@ -40,7 +41,7 @@ class ProductsPage(BasePage):
         else:
             raise ValueError(f"'{category_button}' is not a valid categories button.")
 
-        phones_button = self.get_element(locator=category_selector)
+        phones_button = self.get_clickabale_element(locator=category_selector)
         phones_button.click()
 
     def get_all_cards_on_page(self):
@@ -101,15 +102,20 @@ class ProductsPage(BasePage):
 
         return product_cards
 
-    def get_all_product_cards(self):
+    def get_all_product_cards(self, retries=10):
         """
         Returns ProductCard objects.
 
         This method returns a list of all ProductCard objects that can be created
         with products data from a single products page.
         """
-        all_cards_on_page = self.get_all_cards_on_page()
-        all_cards = self.create_products_cards(cards=all_cards_on_page)
+
+        for _ in range(retries):
+            try:
+                all_cards_on_page = self.get_all_cards_on_page()
+                all_cards = self.create_products_cards(cards=all_cards_on_page)
+            except (StaleElementReferenceException, TimeoutException):
+                continue
 
         return all_cards
 

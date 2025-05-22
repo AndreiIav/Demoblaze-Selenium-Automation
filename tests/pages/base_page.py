@@ -1,4 +1,3 @@
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -9,12 +8,15 @@ class BasePage:
         self.wait = WebDriverWait(
             driver=self.driver,
             timeout=10,
-            ignored_exceptions=[StaleElementReferenceException],
         )
 
     def get_element(self, locator):
         element = self.wait.until(EC.presence_of_element_located(locator))
         return element
+
+    def get_clickabale_element(self, locator):
+        clickable_element = self.wait.until(EC.element_to_be_clickable(locator))
+        return clickable_element
 
     def get_element_text(self, locator):
         element = self.wait.until(EC.presence_of_element_located(locator))
