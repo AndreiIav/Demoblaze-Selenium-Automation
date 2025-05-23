@@ -57,12 +57,3 @@ class LoginPage(BasePage):
     def log_out(self):
         log_out_button = self.get_element(self.LOG_OUT)
         log_out_button.click()
-
-    def get_alert_text(self):
-        alert = self.get_alert()
-        alert_text = alert.text
-        return alert_text
-
-    def accept_alert(self):
-        alert = self.get_alert()
-        alert.accept()

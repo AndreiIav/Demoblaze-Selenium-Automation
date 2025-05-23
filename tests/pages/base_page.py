@@ -54,3 +54,12 @@ class BasePage:
             return alert
         except Exception:
             print("no alert showed up")
+
+    def get_alert_text(self):
+        alert = self.get_alert()
+        alert_text = alert.text
+        return alert_text
+
+    def accept_alert(self):
+        alert = self.get_alert()
+        alert.accept()
