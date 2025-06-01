@@ -37,6 +37,10 @@ class BasePage:
         sub_element_text = sub_element.text
         return sub_element_text
 
+    def get_sub_element(self, parent_element, locator):
+        sub_element = self.wait.until(lambda d: parent_element.find_element(*locator))
+        return sub_element
+
     def get_all_elements(self, locator):
         all_elements = self.wait.until(EC.presence_of_all_elements_located(locator))
         return all_elements
