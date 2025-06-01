@@ -32,12 +32,3 @@ class ProductPage(BasePage):
     def click_add_to_cart_button(self):
         add_to_cart_button = self.get_element(self.ADD_TO_CART_BUTTON)
         add_to_cart_button.click()
-
-    def get_alert_text(self):
-        alert = self.get_alert()
-        alert_text = alert.text
-        return alert_text
-
-    def accept_alert(self):
-        alert = self.get_alert()
-        alert.accept()
