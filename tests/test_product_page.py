@@ -10,11 +10,10 @@ products_with_category = [
 
 
 @pytest.mark.parametrize("products_and_category", products_with_category)
-def test_product_details_matches_card_details(
+def test_product_details_match_card_details(
     test_driver, base_url, products_and_category
 ):
     product_name, product_category = products_and_category
-
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
     test_driver.get(base_url)
@@ -26,14 +25,11 @@ def test_product_details_matches_card_details(
         all_cards=all_product_cards, product_name=test_product_name
     )
     products_page.click_product_link(product_name=product_card.title)
+    product_page_product = product_page.create_product()
 
-    product_page_product_name = product_page.get_product_name()
-    product_page_product_price = product_page.get_product_price()
-    product_page_product_description = product_page.get_product_description()
-
-    assert product_card.title == product_page_product_name
-    assert product_card.price == product_page_product_price
-    assert product_card.description == product_page_product_description
+    assert product_card.title == product_page_product.title
+    assert product_card.price == product_page_product.price
+    assert product_card.description == product_page_product.description
 
 
 def test_add_product_to_cart(test_driver, base_url):
