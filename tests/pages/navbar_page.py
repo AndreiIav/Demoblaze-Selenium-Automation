@@ -23,3 +23,12 @@ class NavbarPage(BasePage):
     def get_log_in_button(self):
         log_in_button = self.get_element(self.LOG_IN_BUTTON)
         return log_in_button
+
+    def click_button(self, button):
+        if button == "cart":
+            selector = self.CART_BUTTON
+        elif button == "home":
+            selector = self.HOME_BUTTON
+
+        button = self.get_element(selector)
+        button.click()
