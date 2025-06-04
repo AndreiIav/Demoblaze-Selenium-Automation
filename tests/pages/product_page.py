@@ -8,7 +8,7 @@ class ProductPage(BasePage):
     PRODUCT_NAME = (By.CSS_SELECTOR, "#tbodyid > .name")
     PRODUCT_PRICE = (By.CSS_SELECTOR, "#tbodyid > .price-container")
     PRODUCT_DESCRIPTION = (By.CSS_SELECTOR, "#more-information p")
-    ADD_TO_CART_BUTTON = (By.CSS_SELECTOR, '[onclick="addToCart(1)"]')
+    ADD_TO_CART_BUTTON = (By.CSS_SELECTOR, "a.btn")
     ADD_TO_CART_ALERT_CONFIRMATION = "Product added"
 
     def __init__(self, driver):

@@ -32,6 +32,9 @@ class CartPage(BasePage):
     # Total and Place Order
     CART_TOTAL_VALUE = (By.ID, "totalp")
 
+    def __init__(self, driver):
+        super().__init__(driver)
+
     @dataclass
     class ProductRowCard:
         """Represents a product row with all its details"""
@@ -120,12 +123,12 @@ class CartPage(BasePage):
                 f"'{product_name}' product can not be found in all_cards."
             )
 
-    def click_product_delete_button(self, product_card):
-        product_delete_button = self.get_clickabale_element(
-            locator=product_card.delete_button
-        )
+    def delete_product(self, element):
+        product_delete_button = self.get_clickabale_element(locator=element)
         product_delete_button.click()
+        self.wait_for_element_to_get_stale(element=element)
+        return
 
-    def get_cart_total_value(self):
-        cart_total_value = self.get_element_text(locator=self.CART_TOTAL_VALUE)
-        return float(cart_total_value)
+    def get_cart_total_price(self):
+        cart_total_price = self.get_element_text(locator=self.CART_TOTAL_VALUE)
+        return float(cart_total_price)

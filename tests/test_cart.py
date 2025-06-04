@@ -33,19 +33,222 @@ def test_product_is_displayed_in_products_table(test_driver, base_url):
     product_rows_cards = cart_page.create_product_rows_cards(
         product_rows=all_product_rows
     )
-    assert (
-        product_rows_cards[0].image_link
-        == "https://www.demoblaze.com/imgs/galaxy_s6.jpg"
-    )
-    assert product_rows_cards[0].title == "Samsung galaxy s6"
-    assert product_rows_cards[0].price == 360
-
-    # check if cart total value matches the product's value
-    cart_total_value = cart_page.get_cart_total_value()
-    assert product_rows_cards[0].price == cart_total_value
-
-    # delete product
-    product_row = cart_page.get_product_card(
+    test_product = cart_page.get_product_card(
         all_cards=product_rows_cards, product_name=test_product_name
     )
-    cart_page.click_product_delete_button(product_card=product_row)
+    assert test_product.image_link == "https://www.demoblaze.com/imgs/galaxy_s6.jpg"
+    assert test_product.title == "Samsung galaxy s6"
+    assert test_product.price == 360
+
+
+def test_product_page_details_match_cart_page_details(test_driver, base_url):
+    products_page = ProductsPage(test_driver)
+    product_page = ProductPage(test_driver)
+    navbar_page = NavbarPage(test_driver)
+    cart_page = CartPage(test_driver)
+    test_driver.get(base_url)
+    phone_test_product_name = "Samsung galaxy s6"
+    laptop_test_product_name = "2017 Dell 15.6 Inch"
+    monitor_test_product_name = "Apple monitor 24"
+
+    # add test products to cart
+
+    # add phone
+    products_page.click_categories_button(category_button="phones")
+    products_page.click_product_link(product_name=phone_test_product_name)
+    phone_product = product_page.create_product()
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Home page
+    navbar_page.click_button(button="home")
+
+    # add laptop
+    products_page.click_categories_button(category_button="laptops")
+    products_page.click_product_link(product_name=laptop_test_product_name)
+    laptop_product = product_page.create_product()
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Home page
+    navbar_page.click_button(button="home")
+
+    # add monitor
+    products_page.click_categories_button(category_button="monitors")
+    products_page.click_product_link(product_name=monitor_test_product_name)
+    monitor_product = product_page.create_product()
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Cart page
+    navbar_page.click_button(button="cart")
+
+    # get all products from products table
+    product_rows = cart_page.get_all_product_rows()
+    # create ProductRowsCards
+    product_rows_cards = cart_page.create_product_rows_cards(product_rows=product_rows)
+    phone_product_row = cart_page.get_product_card(
+        all_cards=product_rows_cards, product_name=phone_test_product_name
+    )
+    laptop_product_row = cart_page.get_product_card(
+        all_cards=product_rows_cards, product_name=laptop_test_product_name
+    )
+    monitor_product_row = cart_page.get_product_card(
+        all_cards=product_rows_cards, product_name=monitor_test_product_name
+    )
+
+    assert phone_product.title == phone_product_row.title
+    assert phone_product.price == phone_product_row.price
+
+    assert laptop_product.title == laptop_product_row.title
+    assert laptop_product.price == laptop_product_row.price
+
+    assert monitor_product.title == monitor_product_row.title
+    assert monitor_product.price == monitor_product_row.price
+
+
+def test_total_cart_price_matches_products_total_price(test_driver, base_url):
+    products_page = ProductsPage(test_driver)
+    product_page = ProductPage(test_driver)
+    navbar_page = NavbarPage(test_driver)
+    cart_page = CartPage(test_driver)
+    test_driver.get(base_url)
+    phone_test_product_name = "Samsung galaxy s6"
+    laptop_test_product_name = "2017 Dell 15.6 Inch"
+    monitor_test_product_name = "Apple monitor 24"
+
+    # add test products to cart
+
+    # add phone
+    products_page.click_categories_button(category_button="phones")
+    products_page.click_product_link(product_name=phone_test_product_name)
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Home page
+    navbar_page.click_button(button="home")
+
+    # add laptop
+    products_page.click_categories_button(category_button="laptops")
+    products_page.click_product_link(product_name=laptop_test_product_name)
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Home page
+    navbar_page.click_button(button="home")
+
+    # add monitor
+    products_page.click_categories_button(category_button="monitors")
+    products_page.click_product_link(product_name=monitor_test_product_name)
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Cart page
+    navbar_page.click_button(button="cart")
+
+    # get all products from products table
+    product_rows = cart_page.get_all_product_rows()
+    # create ProductRowsCards
+    product_rows_cards = cart_page.create_product_rows_cards(product_rows=product_rows)
+    phone_product_row = cart_page.get_product_card(
+        all_cards=product_rows_cards, product_name=phone_test_product_name
+    )
+    laptop_product_row = cart_page.get_product_card(
+        all_cards=product_rows_cards, product_name=laptop_test_product_name
+    )
+    monitor_product_row = cart_page.get_product_card(
+        all_cards=product_rows_cards, product_name=monitor_test_product_name
+    )
+
+    total_products_table_price = (
+        phone_product_row.price,
+        laptop_product_row.price,
+        monitor_product_row.price,
+    )
+    total_products_table_price = sum(total_products_table_price)
+    cart_total_price = cart_page.get_cart_total_price()
+
+    assert total_products_table_price == cart_total_price
+
+
+def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
+    products_page = ProductsPage(test_driver)
+    product_page = ProductPage(test_driver)
+    navbar_page = NavbarPage(test_driver)
+    cart_page = CartPage(test_driver)
+    test_driver.get(base_url)
+    phone_test_product_name = "Samsung galaxy s6"
+    laptop_test_product_name = "2017 Dell 15.6 Inch"
+    monitor_test_product_name = "Apple monitor 24"
+
+    # add test products to cart
+
+    # add phone
+    products_page.click_categories_button(category_button="phones")
+    products_page.click_product_link(product_name=phone_test_product_name)
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Home page
+    navbar_page.click_button(button="home")
+
+    # add laptop
+    products_page.click_categories_button(category_button="laptops")
+    products_page.click_product_link(product_name=laptop_test_product_name)
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Home page
+    navbar_page.click_button(button="home")
+
+    # add monitor
+    products_page.click_categories_button(category_button="monitors")
+    products_page.click_product_link(product_name=monitor_test_product_name)
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Cart page
+    navbar_page.click_button(button="cart")
+
+    # get all products from products table
+    product_rows = cart_page.get_all_product_rows()
+    # create ProductRowsCards
+    product_rows_cards = cart_page.create_product_rows_cards(product_rows=product_rows)
+
+    total_products_table_price = (
+        product_row.price for product_row in product_rows_cards
+    )
+    total_products_table_price = sum(total_products_table_price)
+    cart_total_price = cart_page.get_cart_total_price()
+    assert total_products_table_price == cart_total_price
+
+    # delete product
+    product_to_be_deleted = cart_page.get_product_card(
+        all_cards=product_rows_cards, product_name=laptop_test_product_name
+    )
+    expected_cart_price_after_deleting_product = (
+        cart_total_price - product_to_be_deleted.price
+    )
+    cart_page.delete_product(element=product_to_be_deleted.delete_button)
+
+    # get all products from products table after deleting one product
+    product_rows = cart_page.get_all_product_rows()
+    product_rows_cards = cart_page.create_product_rows_cards(product_rows=product_rows)
+
+    total_products_table_price = (
+        product_row.price for product_row in product_rows_cards
+    )
+    total_products_table_price = sum(total_products_table_price)
+    cart_total_price_updated = cart_page.get_cart_total_price()
+
+    assert total_products_table_price == cart_total_price_updated
+    assert cart_total_price_updated == expected_cart_price_after_deleting_product

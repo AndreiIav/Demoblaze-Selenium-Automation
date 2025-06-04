@@ -51,6 +51,10 @@ class BasePage:
     def check_if_text_is_present_in_element(self, locator, text):
         self.wait.until(EC.text_to_be_present_in_element((locator), text))
 
+    def wait_for_element_to_get_stale(self, element):
+        self.wait.until(EC.staleness_of(element))
+        return
+
     def get_alert(self):
         try:
             self.wait.until(EC.alert_is_present())
