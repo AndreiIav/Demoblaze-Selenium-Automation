@@ -97,8 +97,8 @@ def test_successful_login_after_initial_failed_attempt(
     login_page.get_log_in_modal(log_in_button)
     login_page.login(username=test_inexistent_user, password=test_wrong_password)
     login_page.accept_alert()
-    login_page.clear_username_box()
-    login_page.clear_password_box()
+    login_page.clear_field(field_type="Username")
+    login_page.clear_field(field_type="Password")
     login_page.login(
         username=user_credentials.username, password=user_credentials.password
     )

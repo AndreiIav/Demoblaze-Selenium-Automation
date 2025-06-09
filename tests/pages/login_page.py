@@ -19,25 +19,27 @@ class LoginPage(BasePage):
         self.check_if_element_is_visible(self.LOG_IN_MODAL)
         return
 
-    def set_username(self, username):
-        username_box = self.get_element(locator=self.USERNAME)
-        username_box.send_keys(username)
+    def fill_field(self, field_type, value):
+        if field_type == "Username":
+            locator = self.USERNAME
+        elif field_type == "Password":
+            locator = self.PASSWORD
 
-    def set_password(self, password):
-        password_box = self.get_element(locator=self.PASSWORD)
-        password_box.send_keys(password)
+        field = self.get_element(locator=locator)
+        field.send_keys(value)
+
+    def clear_field(self, field_type):
+        if field_type == "Username":
+            locator = self.USERNAME
+        elif field_type == "Password":
+            locator = self.PASSWORD
+
+        field = self.get_element(locator=locator)
+        field.clear()
 
     def click_log_in(self):
         log_in_button = self.get_element(self.MODAL_LOG_IN_BUTTON)
         log_in_button.click()
-
-    def clear_username_box(self):
-        username_box = self.get_element(locator=self.USERNAME)
-        username_box.clear()
-
-    def clear_password_box(self):
-        password_box = self.get_element(locator=self.PASSWORD)
-        password_box.clear()
 
     def get_logged_in_user_text(self):
         self.check_if_text_is_present_in_element(
@@ -48,8 +50,8 @@ class LoginPage(BasePage):
         return logged_in_user
 
     def login(self, username, password):
-        self.set_username(username)
-        self.set_password(password)
+        self.fill_field(field_type="Username", value=username)
+        self.fill_field(field_type="Password", value=password)
         self.click_log_in()
 
     def log_out(self):
