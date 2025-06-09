@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
@@ -31,6 +32,32 @@ class CartPage(BasePage):
 
     # Total and Place Order
     CART_TOTAL_VALUE = (By.ID, "totalp")
+    PLACE_ORDER_BUTTON = (By.CSS_SELECTOR, "button.btn:nth-child(3)")
+
+    # Place Order Modal
+    PLACE_ORDER_MODAL = (
+        By.CSS_SELECTOR,
+        "#orderModal > div:nth-child(1) > div:nth-child(1)",
+    )
+    ORDER_MODAL_CART_PRICE = (By.ID, "totalm")
+    ORDER_MODAL_NAME = (By.ID, "name")
+    ORDER_MODAL_COUNTRY = (By.ID, "country")
+    ORDER_MODAL_CITY = (By.ID, "city")
+    ORDER_MODAL_CREDIT_CARD = (By.ID, "card")
+    ORDER_MODAL_MONTH = (By.ID, "month")
+    ORDER_MODAL_YEAR = (By.ID, "year")
+    ORDER_MODAL_PURCHASE_BUTTON = (By.CSS_SELECTOR, '[onclick="purchaseOrder()"]')
+    ORDER_MODAL_CLOSE_BUTTON = (
+        By.CSS_SELECTOR,
+        "#orderModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)",
+    )
+
+    # Place Order Confirmation Prompt
+    CONFIRMATION_PROMPT = (By.CLASS_NAME, "sweet-alert")
+    CONFIRMATION_PROMPT_MESSAGE = (By.CSS_SELECTOR, "h2")
+    CONFIRMATION_PROMPT_DATA_BLOCK = (By.CLASS_NAME, "lead")
+    CONFIRMATION_PROMPT_AMOUNT = (By.CSS_SELECTOR, "lead > br:nth-child(1)")
+    CONFIRMATION_PROMPT_OK_BUTTON = (By.CLASS_NAME, "confirm")
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -43,6 +70,18 @@ class CartPage(BasePage):
         title: str
         price: float
         delete_button: WebElement
+
+    @dataclass
+    class ConfirmationPromptData:
+        """Represents the conformation prompt details for an order"""
+
+        order_id_raw: str
+        # store the numerical part of id
+        order_id_numeric: int
+        order_amount: str
+        card_number: str
+        name: str
+        order_date: str
 
     def get_product_table_header_text(self, header):
         if header == "picture":
@@ -132,3 +171,143 @@ class CartPage(BasePage):
     def get_cart_total_price(self):
         cart_total_price = self.get_element_text(locator=self.CART_TOTAL_VALUE)
         return float(cart_total_price)
+
+    def click_place_order_button(self):
+        place_order_button = self.get_clickabale_element(
+            locator=self.PLACE_ORDER_BUTTON
+        )
+        place_order_button.click()
+        return
+
+    def get_place_order_modal(self):
+        self.click_place_order_button()
+        self.check_if_element_is_visible(locator=self.PLACE_ORDER_MODAL)
+        return
+
+    def get_modal_cart_price(self):
+        modal_cart_price = self.get_element_text(locator=self.ORDER_MODAL_CART_PRICE)
+        # remove 'Total: ' and cast the string value to a float
+        modal_cart_price = float(modal_cart_price[6:])
+        return modal_cart_price
+
+    def set_field_value(self, field_locator, field_value):
+        field = self.get_element(locator=field_locator)
+        field.send_keys(field_value)
+
+    def fill_place_order_modal_fields(
+        self,
+        name="Jonh Smith",
+        country="Romania",
+        city="Paris",
+        credit_card="0123456789",
+        month="12",
+        year="1996",
+    ):
+        self.set_field_value(field_locator=self.ORDER_MODAL_NAME, field_value=name)
+        self.set_field_value(
+            field_locator=self.ORDER_MODAL_COUNTRY, field_value=country
+        )
+        self.set_field_value(field_locator=self.ORDER_MODAL_CITY, field_value=city)
+        self.set_field_value(
+            field_locator=self.ORDER_MODAL_CREDIT_CARD, field_value=credit_card
+        )
+        self.set_field_value(field_locator=self.ORDER_MODAL_MONTH, field_value=month)
+        self.set_field_value(field_locator=self.ORDER_MODAL_YEAR, field_value=year)
+
+    def close_place_order_modal(self):
+        close_button = self.get_element(locator=self.ORDER_MODAL_CLOSE_BUTTON)
+        close_button.click()
+        return
+
+    def purchase_order(self):
+        purchase_btton = self.get_element(locator=self.ORDER_MODAL_PURCHASE_BUTTON)
+        purchase_btton.click()
+        return
+
+    def get_confirmation_prompt(self):
+        confirmation_prompt = self.get_element(locator=self.CONFIRMATION_PROMPT)
+        return confirmation_prompt
+
+    def get_confirmation_prompt_message(self):
+        parent = self.get_confirmation_prompt()
+        message = self.get_sub_element_text(
+            parent_element=parent, locator=self.CONFIRMATION_PROMPT_MESSAGE
+        )
+        return message
+
+    def get_confirmation_prompt_data(self) -> str:
+        data_block = self.get_element_text(locator=self.CONFIRMATION_PROMPT_DATA_BLOCK)
+        return data_block
+
+    def parse_confirmation_prompt_data(self, confirmation_prompt_data: str):
+        data = confirmation_prompt_data.split("\n")
+        order_id_raw = data[0]
+        order_id_numeric = int(data[0][4:])
+        order_amount = data[1]
+        card_number = data[2]
+        name = data[3]
+        order_date = data[4]
+
+        return (
+            order_id_raw,
+            order_id_numeric,
+            order_amount,
+            card_number,
+            name,
+            order_date,
+        )
+
+    def create_confirmation_prompt_expected_date(self) -> str:
+        """
+        Generates a formatted date string representing the expected confirmation
+        prompt date.
+
+        The adjustment of subtracting one month from the current date is
+        intentional and reflects the behavior of the site under test, which
+        displays the purchase confirmation date as one month earlier than the
+        actual current date.
+
+        Returns:
+            str: A string formatted as "Date: DD/MM/YYYY" with the month
+            adjusted back by one.
+        """
+        today = datetime.today()
+        if today.month == 1:
+            adjusted_month = 12
+            adjusted_year = today.year - 1
+        else:
+            adjusted_month = today.month - 1
+            adjusted_year = today.year
+
+        formatted_date = today.strftime(f"{today.day}/{adjusted_month}/{adjusted_year}")
+        confirmation_prompt_expected_date_data = f"Date: {formatted_date}"
+        return confirmation_prompt_expected_date_data
+
+    def create_ConfirmationPromptData(self, data):
+        new_ConfirmationPromptData = self.ConfirmationPromptData(
+            order_id_raw=data[0],
+            order_id_numeric=data[1],
+            order_amount=data[2],
+            card_number=data[3],
+            name=data[4],
+            order_date=data[5],
+        )
+
+        return new_ConfirmationPromptData
+
+    def get_confirmation_data(self):
+        confirmation_prompt_data = self.get_confirmation_prompt_data()
+        parsed_data = self.parse_confirmation_prompt_data(
+            confirmation_prompt_data=confirmation_prompt_data
+        )
+        confirmation_prompt_data_object = self.create_ConfirmationPromptData(
+            data=parsed_data
+        )
+        return confirmation_prompt_data_object
+
+    def click_confirmation_prompt_ok_button(self):
+        confirmation_prompt_ok_button = self.get_clickabale_element(
+            self.CONFIRMATION_PROMPT_OK_BUTTON
+        )
+        confirmation_prompt_ok_button.click()
+        return
