@@ -252,3 +252,59 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
 
     assert total_products_table_price == cart_total_price_updated
     assert cart_total_price_updated == expected_cart_price_after_deleting_product
+
+
+def test_can_place_order_succesfully(test_driver, base_url):
+    products_page = ProductsPage(test_driver)
+    product_page = ProductPage(test_driver)
+    navbar_page = NavbarPage(test_driver)
+    cart_page = CartPage(test_driver)
+    test_driver.get(base_url)
+
+    test_product_name = "Samsung galaxy s6"
+    costumer_name = "John Doe"
+    costumer_country = "Italy"
+    costumer_city = "Rome"
+    costumer_credit_card = "1234 brdc 9876"
+    transaction_month = "6"
+    transaction_year = "2025"
+    expected_confirmation_message = "Thank you for your purchase!"
+    expected_date = cart_page.create_confirmation_prompt_expected_date()
+
+    # add test product to cart
+    products_page.click_categories_button(category_button="phones")
+    products_page.click_product_link(product_name=test_product_name)
+    product_page.click_add_to_cart_button()
+    product_page.get_alert_text()
+    product_page.accept_alert()
+
+    # go to Cart page
+    navbar_page.click_button(button="cart")
+
+    # Place Order modal actions
+    cart_page.get_place_order_modal()
+    modal_cart_price = cart_page.get_modal_cart_price()
+    cart_page.fill_place_order_modal_fields(
+        name=costumer_name,
+        country=costumer_country,
+        city=costumer_city,
+        credit_card=costumer_credit_card,
+        month=transaction_month,
+        year=transaction_year,
+    )
+    cart_page.purchase_order()
+
+    confirmation_message = cart_page.get_confirmation_prompt_message()
+    confirmation_prompt_data = cart_page.get_confirmation_data()
+    cart_page.click_confirmation_prompt_ok_button()
+
+    assert confirmation_message == expected_confirmation_message
+    assert confirmation_prompt_data.order_id_numeric > 0
+    assert (
+        confirmation_prompt_data.order_amount == f"Amount: {int(modal_cart_price)} USD"
+    )
+    assert (
+        confirmation_prompt_data.card_number == f"Card Number: {costumer_credit_card}"
+    )
+    assert confirmation_prompt_data.name == f"Name: {costumer_name}"
+    assert confirmation_prompt_data.order_date == expected_date
