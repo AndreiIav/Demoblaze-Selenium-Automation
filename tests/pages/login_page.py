@@ -16,10 +16,8 @@ class LoginPage(BasePage):
 
     def get_log_in_modal(self, log_in_button):
         log_in_button.click()
-        if self.check_if_element_is_visible(self.LOG_IN_MODAL):
-            return True
-        else:
-            raise LookupError("Log_in modal not present")
+        self.check_if_element_is_visible(self.LOG_IN_MODAL)
+        return
 
     def set_username(self, username):
         username_box = self.get_element(locator=self.USERNAME)
@@ -41,11 +39,11 @@ class LoginPage(BasePage):
         password_box = self.get_element(locator=self.PASSWORD)
         password_box.clear()
 
-    def get_logged_in_user(self):
+    def get_logged_in_user_text(self):
         self.check_if_text_is_present_in_element(
-            locator=(self.LOGGED_IN_USER), text=self.WELCOME_USER_TEXT
+            locator=self.LOGGED_IN_USER, text=self.WELCOME_USER_TEXT
         )
-        logged_in_user = self.driver.find_element(*self.LOGGED_IN_USER)
+        logged_in_user = self.get_element_text(locator=self.LOGGED_IN_USER)
 
         return logged_in_user
 

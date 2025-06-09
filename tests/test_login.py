@@ -6,30 +6,32 @@ def test_login_valid_credentials(test_driver, user_credentials, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
     test_driver.get(base_url)
+    expected_logged_in_user_text = f"Welcome {user_credentials.username}"
 
     log_in_button = navbar_page.get_log_in_button()
-    login_page.get_log_in_modal(log_in_button)
+    login_page.get_log_in_modal(log_in_button=log_in_button)
     login_page.login(
         username=user_credentials.username, password=user_credentials.password
     )
-    logged_in_user = login_page.get_logged_in_user()
+    logged_in_user_text = login_page.get_logged_in_user_text()
 
-    assert logged_in_user.text == f"Welcome {user_credentials.username}"
+    assert logged_in_user_text == expected_logged_in_user_text
 
 
 def test_log_out(test_driver, user_credentials, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
     test_driver.get(base_url)
+    expected_logged_in_user_text = f"Welcome {user_credentials.username}"
 
     log_in_button = navbar_page.get_log_in_button()
     login_page.get_log_in_modal(log_in_button)
     login_page.login(
         username=user_credentials.username, password=user_credentials.password
     )
-    logged_in_user = login_page.get_logged_in_user()
+    logged_in_user_text = login_page.get_logged_in_user_text()
 
-    assert logged_in_user.text == f"Welcome {user_credentials.username}"
+    assert logged_in_user_text == expected_logged_in_user_text
 
     login_page.log_out()
 
@@ -40,42 +42,45 @@ def test_login_with_missing_credentials(test_driver, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
     test_driver.get(base_url)
+    expected_alert_text = "Please fill out Username and Password."
 
     log_in_button = navbar_page.get_log_in_button()
     login_page.get_log_in_modal(log_in_button)
     login_page.click_log_in()
-
     alert_text = login_page.get_alert_text()
 
-    assert "Please fill out Username and Password." in alert_text
+    assert expected_alert_text in alert_text
 
 
 def test_login_with_wrong_password(test_driver, base_url, user_credentials):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
     test_driver.get(base_url)
+    test_wrong_password = "fake password"
+    expected_alert_text = "Wrong password"
 
     log_in_button = navbar_page.get_log_in_button()
     login_page.get_log_in_modal(log_in_button)
-    login_page.login(username=user_credentials.username, password="fake password")
-
+    login_page.login(username=user_credentials.username, password=test_wrong_password)
     alert_text = login_page.get_alert_text()
 
-    assert "Wrong password" in alert_text
+    assert expected_alert_text in alert_text
 
 
 def test_login_with_inexistent_user(test_driver, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
     test_driver.get(base_url)
+    test_inexistent_user = "lsfjdsjdfosidufksmdfls!!!!"
+    test_wrong_password = "fake password"
+    expected_alert_text = "User does not exist"
 
     log_in_button = navbar_page.get_log_in_button()
     login_page.get_log_in_modal(log_in_button)
-    login_page.login(username="lsfjdsjdfosidufksmdfls!!!!", password="fake password")
-
+    login_page.login(username=test_inexistent_user, password=test_wrong_password)
     alert_text = login_page.get_alert_text()
 
-    assert "User does not exist" in alert_text
+    assert expected_alert_text in alert_text
 
 
 def test_successful_login_after_initial_failed_attempt(
@@ -84,18 +89,19 @@ def test_successful_login_after_initial_failed_attempt(
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
     test_driver.get(base_url)
+    expected_logged_in_user_text = f"Welcome {user_credentials.username}"
+    test_inexistent_user = "lsfjdsjdfosidufksmdfls!!!!"
+    test_wrong_password = "fake password"
 
     log_in_button = navbar_page.get_log_in_button()
     login_page.get_log_in_modal(log_in_button)
-    login_page.login(username="lsfjdsjdfosidufksmdfls!!!!", password="fake password")
+    login_page.login(username=test_inexistent_user, password=test_wrong_password)
     login_page.accept_alert()
-
     login_page.clear_username_box()
     login_page.clear_password_box()
-
     login_page.login(
         username=user_credentials.username, password=user_credentials.password
     )
-    logged_in_user = login_page.get_logged_in_user()
+    logged_in_user_text = login_page.get_logged_in_user_text()
 
-    assert logged_in_user.text == f"Welcome {user_credentials.username}"
+    assert logged_in_user_text == expected_logged_in_user_text
