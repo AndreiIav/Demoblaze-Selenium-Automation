@@ -11,7 +11,7 @@ class BasePage:
         )
 
     def get_element(self, locator):
-        element = self.wait.until(EC.presence_of_element_located(locator))
+        element = self.wait.until(EC.visibility_of_element_located(locator))
         return element
 
     def get_clickabale_element(self, locator):
@@ -19,7 +19,7 @@ class BasePage:
         return clickable_element
 
     def get_element_text(self, locator):
-        element = self.wait.until(EC.presence_of_element_located(locator))
+        element = self.wait.until(EC.visibility_of_element_located(locator))
         element_text = element.text
         return element_text
 
