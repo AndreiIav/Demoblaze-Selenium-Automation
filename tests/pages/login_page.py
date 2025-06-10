@@ -14,28 +14,21 @@ class LoginPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
 
-    def get_log_in_modal(self, log_in_button):
-        log_in_button.click()
+    def get_log_in_modal(self):
         self.check_if_element_is_visible(self.LOG_IN_MODAL)
         return
 
-    def fill_field(self, field_type, value):
-        if field_type == "Username":
-            locator = self.USERNAME
-        elif field_type == "Password":
-            locator = self.PASSWORD
+    def fill_field(self, field_locator, field_value):
+        field = self.get_element(locator=field_locator)
+        field.send_keys(field_value)
 
-        field = self.get_element(locator=locator)
-        field.send_keys(value)
-
-    def clear_field(self, field_type):
-        if field_type == "Username":
-            locator = self.USERNAME
-        elif field_type == "Password":
-            locator = self.PASSWORD
-
-        field = self.get_element(locator=locator)
+    def clear_field(self, field_locator):
+        field = self.get_element(locator=field_locator)
         field.clear()
+
+    def clear_login_fields(self):
+        self.clear_field(field_locator=self.PASSWORD)
+        self.clear_field(field_locator=self.USERNAME)
 
     def click_log_in(self):
         log_in_button = self.get_element(self.MODAL_LOG_IN_BUTTON)
@@ -50,8 +43,8 @@ class LoginPage(BasePage):
         return logged_in_user
 
     def login(self, username, password):
-        self.fill_field(field_type="Username", value=username)
-        self.fill_field(field_type="Password", value=password)
+        self.fill_field(field_locator=self.USERNAME, field_value=username)
+        self.fill_field(field_locator=self.PASSWORD, field_value=password)
         self.click_log_in()
 
     def log_out(self):
