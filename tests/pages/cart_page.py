@@ -184,11 +184,19 @@ class CartPage(BasePage):
         self.check_if_element_is_visible(locator=self.PLACE_ORDER_MODAL)
         return
 
-    def get_modal_cart_price(self):
-        modal_cart_price = self.get_element_text(locator=self.ORDER_MODAL_CART_PRICE)
-        # remove 'Total: ' and cast the string value to a float
-        modal_cart_price = float(modal_cart_price[6:])
-        return modal_cart_price
+    def get_modal_cart_price(self, retries=10):
+        # the price might not be already loaded when the element text is fetched
+        # so we try a couple of times until we get it
+        for _ in range(retries):
+            try:
+                modal_cart_price = self.get_element_text(
+                    locator=self.ORDER_MODAL_CART_PRICE
+                )
+                # remove 'Total: ' and cast the string value to a float
+                modal_cart_price = float(modal_cart_price[6:])
+                return modal_cart_price
+            except ValueError:
+                continue
 
     def set_field_value(self, field_locator, field_value):
         field = self.get_element(locator=field_locator)
