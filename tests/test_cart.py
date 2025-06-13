@@ -1,3 +1,4 @@
+from flows.flows import ProductToCartFlow
 from pages.cart_page import CartPage
 from pages.navbar_page import NavbarPage
 from pages.product_page import ProductPage
@@ -44,44 +45,42 @@ def test_product_is_displayed_in_products_table(test_driver, base_url):
 def test_product_page_details_match_cart_page_details(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
+    product_to_cart_flow = ProductToCartFlow(
+        product_page=product_page, products_page=products_page
+    )
     navbar_page = NavbarPage(test_driver)
     cart_page = CartPage(test_driver)
     test_driver.get(base_url)
     phone_test_product_name = "Samsung galaxy s6"
+    phone_test_product_category = "phones"
     laptop_test_product_name = "2017 Dell 15.6 Inch"
+    laptop_test_product_category = "laptops"
     monitor_test_product_name = "Apple monitor 24"
+    monitor_test_product_category = "monitors"
 
     # add test products to cart
 
-    # add phone
-    products_page.click_categories_button(category_button="phones")
-    products_page.click_product_link(product_name=phone_test_product_name)
-    phone_product = product_page.create_product()
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    phone_product = product_to_cart_flow.add_product_to_cart_and_get_product(
+        category_button=phone_test_product_category,
+        product_name=phone_test_product_name,
+    )
 
     # go to Home page
     navbar_page.click_button(button="home")
 
-    # add laptop
-    products_page.click_categories_button(category_button="laptops")
-    products_page.click_product_link(product_name=laptop_test_product_name)
-    laptop_product = product_page.create_product()
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    laptop_product = product_to_cart_flow.add_product_to_cart_and_get_product(
+        category_button=laptop_test_product_category,
+        product_name=laptop_test_product_name,
+    )
 
     # go to Home page
     navbar_page.click_button(button="home")
 
     # add monitor
-    products_page.click_categories_button(category_button="monitors")
-    products_page.click_product_link(product_name=monitor_test_product_name)
-    monitor_product = product_page.create_product()
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    monitor_product = product_to_cart_flow.add_product_to_cart_and_get_product(
+        category_button=monitor_test_product_category,
+        product_name=monitor_test_product_name,
+    )
 
     # go to Cart page
     navbar_page.click_button(button="cart")
@@ -115,63 +114,54 @@ def test_total_cart_price_matches_products_total_price(test_driver, base_url):
     product_page = ProductPage(test_driver)
     navbar_page = NavbarPage(test_driver)
     cart_page = CartPage(test_driver)
+    product_to_cart_flow = ProductToCartFlow(
+        product_page=product_page, products_page=products_page
+    )
     test_driver.get(base_url)
     phone_test_product_name = "Samsung galaxy s6"
+    phone_test_product_category = "phones"
     laptop_test_product_name = "2017 Dell 15.6 Inch"
+    laptop_test_product_category = "laptops"
     monitor_test_product_name = "Apple monitor 24"
+    monitor_test_product_category = "monitors"
 
     # add test products to cart
 
     # add phone
-    products_page.click_categories_button(category_button="phones")
-    products_page.click_product_link(product_name=phone_test_product_name)
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    product_to_cart_flow.add_product_to_cart(
+        category_button=phone_test_product_category,
+        product_name=phone_test_product_name,
+    )
 
     # go to Home page
     navbar_page.click_button(button="home")
 
     # add laptop
-    products_page.click_categories_button(category_button="laptops")
-    products_page.click_product_link(product_name=laptop_test_product_name)
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
-
+    product_to_cart_flow.add_product_to_cart(
+        category_button=laptop_test_product_category,
+        product_name=laptop_test_product_name,
+    )
     # go to Home page
     navbar_page.click_button(button="home")
 
     # add monitor
-    products_page.click_categories_button(category_button="monitors")
-    products_page.click_product_link(product_name=monitor_test_product_name)
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    product_to_cart_flow.add_product_to_cart(
+        category_button=monitor_test_product_category,
+        product_name=monitor_test_product_name,
+    )
 
     # go to Cart page
     navbar_page.click_button(button="cart")
 
     # get all products from products table
     product_rows = cart_page.get_all_product_rows()
+
     # create ProductRowsCards
     product_rows_cards = cart_page.create_product_rows_cards(product_rows=product_rows)
-    phone_product_row = cart_page.get_product_card(
-        all_cards=product_rows_cards, product_name=phone_test_product_name
-    )
-    laptop_product_row = cart_page.get_product_card(
-        all_cards=product_rows_cards, product_name=laptop_test_product_name
-    )
-    monitor_product_row = cart_page.get_product_card(
-        all_cards=product_rows_cards, product_name=monitor_test_product_name
-    )
 
-    total_products_table_price = (
-        phone_product_row.price,
-        laptop_product_row.price,
-        monitor_product_row.price,
+    total_products_table_price = sum(
+        product_row.price for product_row in product_rows_cards
     )
-    total_products_table_price = sum(total_products_table_price)
     cart_total_price = cart_page.get_cart_total_price()
 
     assert total_products_table_price == cart_total_price
@@ -183,38 +173,41 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     navbar_page = NavbarPage(test_driver)
     cart_page = CartPage(test_driver)
     test_driver.get(base_url)
+    product_to_cart_flow = ProductToCartFlow(
+        product_page=product_page, products_page=products_page
+    )
     phone_test_product_name = "Samsung galaxy s6"
+    phone_test_product_category = "phones"
     laptop_test_product_name = "2017 Dell 15.6 Inch"
+    laptop_test_product_category = "laptops"
     monitor_test_product_name = "Apple monitor 24"
+    monitor_test_product_category = "monitors"
 
     # add test products to cart
 
     # add phone
-    products_page.click_categories_button(category_button="phones")
-    products_page.click_product_link(product_name=phone_test_product_name)
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    product_to_cart_flow.add_product_to_cart(
+        category_button=phone_test_product_category,
+        product_name=phone_test_product_name,
+    )
 
     # go to Home page
     navbar_page.click_button(button="home")
 
     # add laptop
-    products_page.click_categories_button(category_button="laptops")
-    products_page.click_product_link(product_name=laptop_test_product_name)
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    product_to_cart_flow.add_product_to_cart(
+        category_button=laptop_test_product_category,
+        product_name=laptop_test_product_name,
+    )
 
     # go to Home page
     navbar_page.click_button(button="home")
 
     # add monitor
-    products_page.click_categories_button(category_button="monitors")
-    products_page.click_product_link(product_name=monitor_test_product_name)
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    product_to_cart_flow.add_product_to_cart(
+        category_button=monitor_test_product_category,
+        product_name=monitor_test_product_name,
+    )
 
     # go to Cart page
     navbar_page.click_button(button="cart")
@@ -224,11 +217,11 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     # create ProductRowsCards
     product_rows_cards = cart_page.create_product_rows_cards(product_rows=product_rows)
 
-    total_products_table_price = (
+    total_products_table_price = sum(
         product_row.price for product_row in product_rows_cards
     )
-    total_products_table_price = sum(total_products_table_price)
     cart_total_price = cart_page.get_cart_total_price()
+
     assert total_products_table_price == cart_total_price
 
     # delete product
@@ -244,10 +237,9 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     product_rows = cart_page.get_all_product_rows()
     product_rows_cards = cart_page.create_product_rows_cards(product_rows=product_rows)
 
-    total_products_table_price = (
+    total_products_table_price = sum(
         product_row.price for product_row in product_rows_cards
     )
-    total_products_table_price = sum(total_products_table_price)
     cart_total_price_updated = cart_page.get_cart_total_price()
 
     assert total_products_table_price == cart_total_price_updated
@@ -257,11 +249,19 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
 def test_can_place_order_succesfully(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
+    product_to_cart_flow = ProductToCartFlow(
+        product_page=product_page, products_page=products_page
+    )
     navbar_page = NavbarPage(test_driver)
     cart_page = CartPage(test_driver)
     test_driver.get(base_url)
 
-    test_product_name = "Samsung galaxy s6"
+    phone_test_product_name = "Iphone 6 32gb"
+    phone_test_product_category = "phones"
+    laptop_test_product_name = "MacBook Pro"
+    laptop_test_product_category = "laptops"
+    monitor_test_product_name = "ASUS Full HD"
+    monitor_test_product_category = "monitors"
     costumer_name = "John Doe"
     costumer_country = "Italy"
     costumer_city = "Rome"
@@ -271,17 +271,36 @@ def test_can_place_order_succesfully(test_driver, base_url):
     expected_confirmation_message = "Thank you for your purchase!"
     expected_date = cart_page.create_confirmation_prompt_expected_date()
 
-    # add test product to cart
-    products_page.click_categories_button(category_button="phones")
-    products_page.click_product_link(product_name=test_product_name)
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    # add test products to cart
+
+    # add phone
+    product_to_cart_flow.add_product_to_cart(
+        category_button=phone_test_product_category,
+        product_name=phone_test_product_name,
+    )
+
+    # go to Home page
+    navbar_page.click_button(button="home")
+
+    # add laptop
+    product_to_cart_flow.add_product_to_cart(
+        category_button=laptop_test_product_category,
+        product_name=laptop_test_product_name,
+    )
+
+    # go to Home page
+    navbar_page.click_button(button="home")
+
+    # add monitor
+    product_to_cart_flow.add_product_to_cart(
+        category_button=monitor_test_product_category,
+        product_name=monitor_test_product_name,
+    )
 
     # go to Cart page
     navbar_page.click_button(button="cart")
 
-    # Place Order modal actions
+    # Fill Order details
     cart_page.get_place_order_modal()
     modal_cart_price = cart_page.get_modal_cart_price()
     cart_page.fill_place_order_modal_fields(
