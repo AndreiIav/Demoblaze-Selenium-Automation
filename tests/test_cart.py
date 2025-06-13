@@ -11,14 +11,16 @@ def test_product_is_displayed_in_products_table(test_driver, base_url):
     navbar_page = NavbarPage(test_driver)
     cart_page = CartPage(test_driver)
     test_driver.get(base_url)
+    product_to_cart_flow = ProductToCartFlow(
+        product_page=product_page, products_page=products_page
+    )
     test_product_name = "Samsung galaxy s6"
+    test_product_category = "phones"
 
     # add test product to cart
-    products_page.click_categories_button(category_button="phones")
-    products_page.click_product_link(product_name=test_product_name)
-    product_page.click_add_to_cart_button()
-    product_page.get_alert_text()
-    product_page.accept_alert()
+    product_to_cart_flow.add_product_to_cart(
+        category_button=test_product_category, product_name=test_product_name
+    )
 
     # go to Cart page
     navbar_page.click_button(button="cart")
