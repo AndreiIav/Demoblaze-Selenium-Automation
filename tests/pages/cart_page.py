@@ -206,6 +206,11 @@ class CartPage(BasePage):
             except ValueError:
                 continue
 
+        raise ValueError(
+            f"Price value could not be extracted from '{modal_cart_price}' string"
+            f" and cast to a float after {retries} retries"
+        )
+
     def set_field_value(self, field_locator: tuple[str, str], field_value: str) -> None:
         field = self.get_element(locator=field_locator)
         field.send_keys(field_value)
