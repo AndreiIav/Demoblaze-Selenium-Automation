@@ -11,7 +11,6 @@ class LoginPage(BasePage):
     MODAL_LOG_IN_BUTTON = (By.CSS_SELECTOR, '[onclick="logIn()"]')
     LOGGED_IN_USER = (By.ID, "nameofuser")
     LOG_OUT = (By.CSS_SELECTOR, '[onclick="logOut()"]')
-    WELCOME_USER_TEXT = "Welcome"
 
     def __init__(self, driver: WebDriver) -> None:
         super().__init__(driver)
@@ -37,9 +36,7 @@ class LoginPage(BasePage):
         log_in_button.click()
 
     def get_logged_in_user_text(self) -> str:
-        self.check_if_text_is_present_in_element(
-            locator=self.LOGGED_IN_USER, text=self.WELCOME_USER_TEXT
-        )
+        self.get_element(locator=self.LOGGED_IN_USER)
         logged_in_user = self.get_element_text(locator=self.LOGGED_IN_USER)
 
         return logged_in_user
