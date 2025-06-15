@@ -1,5 +1,7 @@
-from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+
+from pages.base_page import BasePage
 
 
 class NavbarPage(BasePage):
@@ -17,10 +19,10 @@ class NavbarPage(BasePage):
     LOG_OUT_BUTTON = (By.CSS_SELECTOR, '[onclick="logOut()"]')
     SIGN_UP_BUTTON = (By.ID, "signin2")
 
-    def __init__(self, driver):
+    def __init__(self, driver: WebDriver) -> None:
         super().__init__(driver)
 
-    def click_button(self, button):
+    def click_button(self, button: str) -> None:
         if button == "cart":
             locator = self.CART_BUTTON
         elif button == "home":

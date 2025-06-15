@@ -1,7 +1,18 @@
 from dataclasses import dataclass
 
-from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+
+from pages.base_page import BasePage
+
+
+@dataclass
+class Product:
+    """Represents a product with all its details"""
+
+    title: str
+    price: float
+    description: str
 
 
 class ProductPage(BasePage):
@@ -11,22 +22,14 @@ class ProductPage(BasePage):
     ADD_TO_CART_BUTTON = (By.CSS_SELECTOR, "a.btn")
     ADD_TO_CART_ALERT_CONFIRMATION = "Product added"
 
-    def __init__(self, driver):
+    def __init__(self, driver: WebDriver) -> None:
         super().__init__(driver)
 
-    @dataclass
-    class Product:
-        """Represents a product with all its details"""
-
-        title: str
-        price: float
-        description: str
-
-    def get_product_name(self):
+    def get_product_name(self) -> str:
         product_name = self.get_element_text(locator=self.PRODUCT_NAME)
         return product_name
 
-    def get_product_price(self):
+    def get_product_price(self) -> float:
         product_price = self.get_element(locator=self.PRODUCT_PRICE)
 
         # product_price is a string like '$360 *includes tax'
@@ -35,18 +38,18 @@ class ProductPage(BasePage):
         price = float(product_price.text[1:-14])
         return price
 
-    def get_product_description(self):
+    def get_product_description(self) -> str:
         product_description = self.get_element_text(locator=self.PRODUCT_DESCRIPTION)
         return product_description
 
-    def click_add_to_cart_button(self):
+    def click_add_to_cart_button(self) -> None:
         add_to_cart_button = self.get_element(self.ADD_TO_CART_BUTTON)
         add_to_cart_button.click()
 
-    def create_product(self):
+    def create_product(self) -> Product:
         """Creates Product objects"""
 
-        new_product = self.Product(
+        new_product = Product(
             title=self.get_product_name(),
             price=self.get_product_price(),
             description=self.get_product_description(),

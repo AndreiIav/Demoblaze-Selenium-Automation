@@ -1,8 +1,22 @@
 from dataclasses import dataclass
 
-from pages.base_page import BasePage
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
+
+from pages.base_page import BasePage
+
+
+@dataclass
+class ProductCard:
+    """Represents a product card with all its details"""
+
+    image_link: str
+    title: str
+    title_link: str
+    price: float
+    description: str
 
 
 class ProductsPage(BasePage):
@@ -18,20 +32,10 @@ class ProductsPage(BasePage):
     CARD_PRODUCT_PRICE = (By.CSS_SELECTOR, ".card-block > h5")
     CARD_PRODUCT_DESCRIPTION = (By.ID, "article")
 
-    def __init__(self, driver):
+    def __init__(self, driver: WebDriver) -> None:
         super().__init__(driver)
 
-    @dataclass
-    class ProductCard:
-        """Represents a product card with all its details"""
-
-        image_link: str
-        title: str
-        title_link: str
-        price: float
-        description: str
-
-    def click_categories_button(self, category_button):
+    def click_categories_button(self, category_button: str) -> None:
         if category_button == "phones":
             category_selector = self.PHONES
         elif category_button == "laptops":
@@ -44,11 +48,11 @@ class ProductsPage(BasePage):
         phones_button = self.get_clickabale_element(locator=category_selector)
         phones_button.click()
 
-    def get_all_cards_on_page(self):
+    def get_all_cards_on_page(self) -> list[WebElement]:
         all_cards = self.get_all_elements(self.CARD)
         return all_cards
 
-    def get_card_link(self, card, link_origin):
+    def get_card_link(self, card: WebElement, link_origin: str) -> str | None:
         if link_origin == "card_image":
             link_selector = self.CARD_IMAGE_LINK
         elif link_origin == "card_title":
@@ -61,37 +65,37 @@ class ProductsPage(BasePage):
         )
         return card_link
 
-    def get_card_title(self, card):
+    def get_card_title(self, card: WebElement) -> str:
         card_title = self.get_sub_element_text(
             parent_element=card,
             locator=self.CARD_PRODUCT_TITLE,
         )
         return card_title
 
-    def get_card_price(self, card):
+    def get_card_price(self, card: WebElement) -> float:
         card_price = self.get_sub_element_text(
             parent_element=card, locator=self.CARD_PRODUCT_PRICE
         )
         # remove the '$' sign and cast the string value to a float
-        card_price = float(card_price[1:])
-        return card_price
+        card_price_value = float(card_price[1:])
+        return card_price_value
 
-    def get_card_description(self, card):
+    def get_card_description(self, card: WebElement) -> str:
         card_description = self.get_sub_element_text(
             parent_element=card, locator=self.CARD_PRODUCT_DESCRIPTION
         )
         return card_description
 
-    def click_product_link(self, product_name):
+    def click_product_link(self, product_name: str) -> None:
         product_link = self.get_element(locator=(By.LINK_TEXT, product_name))
         product_link.click()
 
-    def create_products_cards(self, cards):
+    def create_products_cards(self, cards: list[WebElement]) -> list[ProductCard]:
         """Creates ProductCard objects from the data passsed in cards argument"""
         product_cards = []
 
         for card in cards:
-            new_card = self.ProductCard(
+            new_card = ProductCard(
                 title_link=self.get_card_link(card=card, link_origin="card_image"),
                 image_link=self.get_card_link(card=card, link_origin="card_title"),
                 title=self.get_card_title(card=card),
@@ -102,7 +106,7 @@ class ProductsPage(BasePage):
 
         return product_cards
 
-    def get_all_product_cards(self, retries=10):
+    def get_all_product_cards(self, retries: int = 10) -> list[ProductCard]:
         """
         Returns ProductCard objects.
 
@@ -119,7 +123,9 @@ class ProductsPage(BasePage):
 
         return all_cards
 
-    def get_product_card(self, all_cards, product_name):
+    def get_product_card(
+        self, all_cards: list[ProductCard], product_name: str
+    ) -> ProductCard:
         """
         Returns a single ProductCard object or raises a LookupError if the name
         is not found.

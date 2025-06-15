@@ -1,5 +1,7 @@
-from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+
+from pages.base_page import BasePage
 
 
 class LoginPage(BasePage):
@@ -11,30 +13,30 @@ class LoginPage(BasePage):
     LOG_OUT = (By.CSS_SELECTOR, '[onclick="logOut()"]')
     WELCOME_USER_TEXT = "Welcome"
 
-    def __init__(self, driver):
+    def __init__(self, driver: WebDriver) -> None:
         super().__init__(driver)
 
-    def get_log_in_modal(self):
+    def get_log_in_modal(self) -> None:
         self.check_if_element_is_visible(self.LOG_IN_MODAL)
         return
 
-    def fill_field(self, field_locator, field_value):
+    def fill_field(self, field_locator: tuple[str, str], field_value: str) -> None:
         field = self.get_element(locator=field_locator)
         field.send_keys(field_value)
 
-    def clear_field(self, field_locator):
+    def clear_field(self, field_locator: tuple[str, str]) -> None:
         field = self.get_element(locator=field_locator)
         field.clear()
 
-    def clear_login_fields(self):
+    def clear_login_fields(self) -> None:
         self.clear_field(field_locator=self.PASSWORD)
         self.clear_field(field_locator=self.USERNAME)
 
-    def click_log_in(self):
+    def click_log_in(self) -> None:
         log_in_button = self.get_element(self.MODAL_LOG_IN_BUTTON)
         log_in_button.click()
 
-    def get_logged_in_user_text(self):
+    def get_logged_in_user_text(self) -> str:
         self.check_if_text_is_present_in_element(
             locator=self.LOGGED_IN_USER, text=self.WELCOME_USER_TEXT
         )
@@ -42,11 +44,11 @@ class LoginPage(BasePage):
 
         return logged_in_user
 
-    def login(self, username, password):
+    def login(self, username: str, password: str) -> None:
         self.fill_field(field_locator=self.USERNAME, field_value=username)
         self.fill_field(field_locator=self.PASSWORD, field_value=password)
         self.click_log_in()
 
-    def log_out(self):
+    def log_out(self) -> None:
         log_out_button = self.get_element(self.LOG_OUT)
         log_out_button.click()
