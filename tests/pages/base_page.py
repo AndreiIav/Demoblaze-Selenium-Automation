@@ -54,9 +54,6 @@ class BasePage:
         all_elements = self.wait.until(EC.presence_of_all_elements_located(locator))
         return all_elements
 
-    def check_if_element_is_visible(self, locator: tuple[str, str]) -> None:
-        self.wait.until(EC.visibility_of_element_located(locator=locator))
-
     def check_if_text_is_present_in_element(
         self, locator: tuple[str, str], text: str
     ) -> None:

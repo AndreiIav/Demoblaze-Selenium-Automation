@@ -189,7 +189,7 @@ class CartPage(BasePage):
 
     def get_place_order_modal(self) -> None:
         self.click_place_order_button()
-        self.check_if_element_is_visible(locator=self.PLACE_ORDER_MODAL)
+        self.get_element(locator=self.PLACE_ORDER_MODAL)
         return
 
     def get_modal_cart_price(self, retries: int = 10) -> float:

@@ -17,7 +17,7 @@ class LoginPage(BasePage):
         super().__init__(driver)
 
     def get_log_in_modal(self) -> None:
-        self.check_if_element_is_visible(self.LOG_IN_MODAL)
+        self.get_element(self.LOG_IN_MODAL)
         return
 
     def fill_field(self, field_locator: tuple[str, str], field_value: str) -> None:
