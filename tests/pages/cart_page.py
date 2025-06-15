@@ -104,7 +104,7 @@ class CartPage(BasePage):
         product_rows = self.get_all_elements(locator=self.PRODUCT_TABLE_PRODUCT_ROW)
         return product_rows
 
-    def get_product_row_image_link(self, product_row: WebElement) -> str | None:
+    def get_product_row_image_link(self, product_row: WebElement) -> str:
         image_link = (
             self.get_sub_element_attribute(
                 parent_element=product_row,

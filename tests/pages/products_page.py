@@ -52,7 +52,7 @@ class ProductsPage(BasePage):
         all_cards = self.get_all_elements(self.CARD)
         return all_cards
 
-    def get_card_link(self, card: WebElement, link_origin: str) -> str | None:
+    def get_card_link(self, card: WebElement, link_origin: str) -> str:
         if link_origin == "card_image":
             link_selector = self.CARD_IMAGE_LINK
         elif link_origin == "card_title":

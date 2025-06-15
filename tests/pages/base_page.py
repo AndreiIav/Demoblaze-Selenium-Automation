@@ -30,10 +30,13 @@ class BasePage:
 
     def get_sub_element_attribute(
         self, parent_element: WebElement, locator: tuple[str, str], attribute: str
-    ) -> str | None:
+    ) -> str:
         sub_element = self.wait.until(lambda d: parent_element.find_element(*locator))
         sub_element_attribute = sub_element.get_attribute(name=attribute)
-        return sub_element_attribute
+        if sub_element_attribute:
+            return sub_element_attribute
+        else:
+            raise AttributeError(f"{attribute} attribute was not found for {locator}")
 
     def get_sub_element_text(
         self,
