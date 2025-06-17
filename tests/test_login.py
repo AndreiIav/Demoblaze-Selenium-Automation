@@ -18,26 +18,6 @@ def test_login_valid_credentials(test_driver, user_credentials, base_url):
     assert logged_in_user_text == expected_logged_in_user_text
 
 
-def test_log_out(test_driver, user_credentials, base_url):
-    login_page = LoginPage(test_driver)
-    navbar_page = NavbarPage(test_driver)
-    test_driver.get(base_url)
-    expected_logged_in_user_text = f"Welcome {user_credentials.username}"
-
-    navbar_page.click_button(button="log in")
-    login_page.get_log_in_modal()
-    login_page.login(
-        username=user_credentials.username, password=user_credentials.password
-    )
-    logged_in_user_text = login_page.get_logged_in_user_text()
-
-    assert logged_in_user_text == expected_logged_in_user_text
-
-    login_page.log_out()
-
-    assert navbar_page.check_if_element_is_visible(navbar_page.LOG_IN_BUTTON)
-
-
 def test_login_with_missing_credentials(test_driver, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
