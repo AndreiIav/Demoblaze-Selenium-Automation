@@ -1,9 +1,6 @@
-# From https://github.com/SeleniumHQ/docker-selenium?tab=readme-ov-file#docker-compose
+# The setup for Selenium Grid is taken from
+# https://github.com/SeleniumHQ/docker-selenium?tab=readme-ov-file#docker-compose
 
-# To execute this docker compose yml file use `docker compose -f docker-compose-v3.yml up`
-# Add the `-d` flag at the end for detached execution
-# To stop the execution, hit Ctrl+C, and then `docker compose -f docker-compose-v3.yml down`
-version: "3"
 services:
   chrome:
     image: selenium/node-chrome:4.28.1-20250202
@@ -32,3 +29,21 @@ services:
       - "4442:4442"
       - "4443:4443"
       - "4444:4444"
+
+  selenium-tests-chrome:
+    build: .
+    depends_on:
+      - selenium-hub
+      - chrome
+    environment:
+      - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
+    command: [ "uv", "run", "pytest", "--headless", "--selenium_grid", "--browser", "chrome" ]
+
+  selenium-tests-firefox:
+    build: .
+    depends_on:
+      - selenium-hub
+      - firefox
+    environment:
+      - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
+    command: [ "uv", "run", "pytest", "--headless", "--selenium_grid", "--browser", "firefox" ]

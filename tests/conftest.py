@@ -1,4 +1,5 @@
 import json
+import os
 from collections import namedtuple
 from dataclasses import dataclass
 
@@ -61,7 +62,13 @@ def browser_option(browser_name, is_headeless):
 def test_driver(browser_name, browser_option, run_on_selenium_grid):
     if run_on_selenium_grid:
         if browser_name in ("chrome", "firefox"):
-            driver = webdriver.Remote("http://localhost:4444", options=browser_option)
+            command_executor = os.getenv(
+                "SELENIUM_HUB_URL", default="http://localhost:4444"
+            )
+            driver = webdriver.Remote(
+                command_executor=command_executor,
+                options=browser_option,
+            )
         else:
             raise ValueError(f"Unsupported browser: {browser_name}")
 
