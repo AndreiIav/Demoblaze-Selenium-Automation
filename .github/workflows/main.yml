@@ -31,9 +31,11 @@ jobs:
 
     - name: Run test containers
       run: |
-        docker compose -f docker-compose.yml up
-        docker wait selenium-tests-chrome || true
-        docker wait elenium-tests-firefox || true
+        docker compose -f docker-compose.yml up -d
+
+        echo "Waiting for test containers to finish..."
+        docker compose wait selenium-tests-chrome || true
+        docker compose wait selenium-tests-firefox || true
       continue-on-error: true
 
     - name: Show selenium test logs
@@ -43,7 +45,7 @@ jobs:
         docker compose logs selenium-test-chrome || echo "No logs for chrome"
 
         echo "selenium-test-firefox logs:"
-        docker compose logs selenium-test-chrome || echo "No logs for firefox"
+        docker compose logs selenium-test-firefox || echo "No logs for firefox"
     
     - name: Tear down
       if: always()
