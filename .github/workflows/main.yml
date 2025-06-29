@@ -26,7 +26,11 @@ jobs:
     - name: Install depenedencies
       run: uv sync
 
-    - name: Docker
+    - name: Set up Docker Compose
       run: |
         docker compose -f docker-compose.yml up -d --build
+
+    - name: Tear down
+      if: always()
+      run: docker-compose down
       
