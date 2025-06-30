@@ -16,6 +16,9 @@ COPY uv.lock .
 COPY pyproject.toml .
 RUN uv sync 
 
+# Install allure-pytest
+RUN uv add allure-pytest
+
 # add project
 COPY . .
 

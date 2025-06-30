@@ -35,15 +35,19 @@ services:
     depends_on:
       - selenium-hub
       - chrome
+    volumes:
+      - ./allure-results:/results
     environment:
       - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
-    command: [ "uv", "run", "pytest", "--headless", "--selenium_grid", "--browser", "chrome" ]
+    command: [ "uv", "run", "pytest", "--alluredir=/results", "--headless", "--selenium_grid", "--browser", "chrome" ]
 
   selenium-tests-firefox:
     build: .
     depends_on:
       - selenium-hub
       - firefox
+    volumes:
+      - ./allure-results:/results
     environment:
       - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
-    command: [ "uv", "run", "pytest", "--headless", "--selenium_grid", "--browser", "firefox" ]
+    command: [ "uv", "run", "pytest", "--alluredir=/results", "--headless", "--selenium_grid", "--browser", "firefox" ]
