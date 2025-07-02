@@ -36,7 +36,7 @@ services:
       - selenium-hub
       - chrome
     volumes:
-      - ./allure-results:/results
+      - ./allure-results:/usr/app/results
     environment:
       - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
     command: [ "uv", "run", "pytest", "--alluredir", "results", "--headless", "--selenium_grid", "--browser", "chrome" ]
@@ -47,7 +47,7 @@ services:
       - selenium-hub
       - firefox
     volumes:
-      - ./allure-results:/results
+      - ./allure-results:/usr/app/results
     environment:
       - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
     command: [ "uv", "run", "pytest", "--alluredir", "results", "--headless", "--selenium_grid", "--browser", "firefox" ]
