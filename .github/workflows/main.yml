@@ -39,6 +39,39 @@ jobs:
         docker compose wait selenium-tests-firefox || true
       continue-on-error: true
 
+    - name: Collect and merge test results
+      if: always()
+      run: |
+        echo "Merging test results from both browsers..."
+
+        # Create final results directory
+        mkdir -p allure-results
+
+        # Check what we have
+        echo "Chrome results:"
+        ls -la allure-results-chrome/ || echo "No Chrome results directory"
+
+        echo "Firefox results:"
+        ls -la allure-results-firefox/ || echo "No Firefox results directory"
+
+        # Merge results
+        if [ -d "allure-results-chrome"] && [ "$(ls -A allure-results-chrome)"]; then
+          cp -r allure-results-chrome/* allure-results/
+          echo "Chrome results merged"
+        else
+          echo "No Chrome results to merge"
+        fi
+
+        if [ -d "allure-results-firefox"] && [ "$(ls -A allure-results-firefox)"]; then
+          cp -r allure-results-firefox/* allure-results/
+          echo "Firefox results merged"
+        else
+          echo "No Firefox results to merge"
+        fi
+
+        echo "Final merged results:"
+        ls -la allure-results/ || echo "No final results"
+
     - name: Show selenium test logs
       if: always()
       run: |
