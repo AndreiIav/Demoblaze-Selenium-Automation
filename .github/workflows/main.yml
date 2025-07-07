@@ -45,32 +45,18 @@ jobs:
         echo "Merging test results from both browsers..."
 
         # Create final results directory
+        echo "Creating the allure-results directory"
         mkdir -p allure-results
 
-        # Check what we have
-        echo "Chrome results:"
-        ls -la allure-results-chrome/ || echo "No Chrome results directory"
-
-        echo "Firefox results:"
-        ls -la allure-results-firefox/ || echo "No Firefox results directory"
-
         # Merge results
-        if [ -d "allure-results-chrome"] && [ "$(ls -A allure-results-chrome)"]; then
-          cp -r allure-results-chrome/* allure-results/
-          echo "Chrome results merged"
-        else
-          echo "No Chrome results to merge"
-        fi
+        echo "Merging Chrome results"
+        cp allure-results-chrome/* allure-results/
 
-        if [ -d "allure-results-firefox"] && [ "$(ls -A allure-results-firefox)"]; then
-          cp -r allure-results-firefox/* allure-results/
-          echo "Firefox results merged"
-        else
-          echo "No Firefox results to merge"
-        fi
+        echo "Merging Firefox results"
+        cp allure-results-firefox/* allure-results/
 
-        echo "Final merged results:"
-        ls -la allure-results/ || echo "No final results"
+        echo "Final merged results count:"
+        ls allure-results/ | sort | uniq | wc -l
 
     - name: Show selenium test logs
       if: always()
