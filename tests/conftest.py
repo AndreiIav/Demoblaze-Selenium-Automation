@@ -3,6 +3,7 @@ import os
 from collections import namedtuple
 from dataclasses import dataclass
 
+import allure
 import pytest
 from selenium import webdriver
 
@@ -137,3 +138,10 @@ def get_products_json_data():
             expected_products_data[expected_product_name].append(prod)
 
     return expected_products_data
+
+
+@pytest.fixture(autouse=True)
+def add_browser_label(request):
+    browser = request.config.getoption("--browser")
+    allure.dynamic.label("browser", browser)
+    allure.dynamic.tag(browser)
