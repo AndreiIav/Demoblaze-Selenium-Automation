@@ -145,3 +145,11 @@ def add_browser_label(request):
     browser = request.config.getoption("--browser")
     allure.dynamic.label("browser", browser)
     allure.dynamic.tag(browser)
+
+
+def pytest_collection_modifyitems(config, items):
+    browser = config.getoption("--browser")
+    for item in items:
+        # Add browser name to the test name
+        item.name = f"{item.name} [{browser}]"
+        item._nodeid = f"{item.nodeid} [{browser}]"
