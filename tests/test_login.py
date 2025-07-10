@@ -1,7 +1,11 @@
+import allure
+import pytest
 from pages.login_page import LoginPage
 from pages.navbar_page import NavbarPage
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_login_valid_credentials(test_driver, user_credentials, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
@@ -18,6 +22,8 @@ def test_login_valid_credentials(test_driver, user_credentials, base_url):
     assert logged_in_user_text == expected_logged_in_user_text
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_login_with_missing_credentials(test_driver, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
@@ -32,6 +38,8 @@ def test_login_with_missing_credentials(test_driver, base_url):
     assert expected_alert_text in alert_text
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_login_with_wrong_password(test_driver, base_url, user_credentials):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
@@ -47,6 +55,8 @@ def test_login_with_wrong_password(test_driver, base_url, user_credentials):
     assert expected_alert_text in alert_text
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_login_with_inexistent_user(test_driver, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
@@ -63,6 +73,8 @@ def test_login_with_inexistent_user(test_driver, base_url):
     assert expected_alert_text in alert_text
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_successful_login_after_initial_failed_attempt(
     test_driver, base_url, user_credentials
 ):

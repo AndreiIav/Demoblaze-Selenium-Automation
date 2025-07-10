@@ -30,42 +30,19 @@ jobs:
     - name: Build Docker images
       run: docker compose -f docker-compose.yml build
 
-    - name: Run test containers
+    - name: Run test container
       run: |
         docker compose -f docker-compose.yml up -d
 
-        echo "Waiting for test containers to finish..."
-        docker compose wait selenium-tests-chrome || true
-        docker compose wait selenium-tests-firefox || true
+        echo "Waiting for test container to finish..."
+        docker compose wait test-runner || true
       continue-on-error: true
 
-    - name: Collect and merge test results
+    - name: Show test logs
       if: always()
       run: |
-        echo "Merging test results from both browsers..."
-
-        # Create final results directory
-        echo "Creating the allure-results directory"
-        mkdir -p allure-results
-
-        # Merge results
-        echo "Merging Chrome results"
-        cp allure-results-chrome/* allure-results/
-
-        echo "Merging Firefox results"
-        cp allure-results-firefox/* allure-results/
-
-        echo "Final merged results count:"
-        ls allure-results/ | sort | uniq | wc -l
-
-    - name: Show selenium test logs
-      if: always()
-      run: |
-        echo "selenium-test-chrome logs:"
-        docker compose logs selenium-tests-chrome || echo "No logs for chrome"
-
-        echo "selenium-test-firefox logs:"
-        docker compose logs selenium-tests-firefox || echo "No logs for firefox"
+        echo "test-runner logs:"
+        docker compose logs test-runner || echo "No logs for test-runner"
 
     - name: Load test report history
       uses: actions/checkout@v4

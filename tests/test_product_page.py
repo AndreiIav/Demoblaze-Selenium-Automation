@@ -1,3 +1,4 @@
+import allure
 import pytest
 from pages.product_page import ProductPage
 from pages.products_page import ProductsPage
@@ -9,6 +10,8 @@ products_with_category = [
 ]
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 @pytest.mark.parametrize("products_and_category", products_with_category)
 def test_product_details_match_card_details(
     test_driver, base_url, products_and_category
@@ -32,6 +35,8 @@ def test_product_details_match_card_details(
     assert product_card.description == product_page_product.description
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_add_product_to_cart(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)

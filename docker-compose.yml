@@ -30,24 +30,14 @@ services:
       - "4443:4443"
       - "4444:4444"
 
-  selenium-tests-chrome:
+  test-runner:
     build: .
     depends_on:
       - selenium-hub
       - chrome
-    volumes:
-      - ./allure-results-chrome:/usr/app/results
-    environment:
-      - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
-    command: [ "uv", "run", "pytest", "--alluredir", "results", "--headless", "--selenium_grid", "--browser", "chrome" ]
-
-  selenium-tests-firefox:
-    build: .
-    depends_on:
-      - selenium-hub
       - firefox
     volumes:
-      - ./allure-results-firefox:/usr/app/results
+      - ./allure-results:/usr/app/results
     environment:
       - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
-    command: [ "uv", "run", "pytest", "--alluredir", "results", "--headless", "--selenium_grid", "--browser", "firefox" ]
+    command: [ "uv", "run", "pytest", "--alluredir", "results", "--headless", "--selenium_grid" ]

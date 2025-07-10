@@ -1,3 +1,5 @@
+import allure
+import pytest
 from flows.flows import ProductToCartFlow
 from pages.cart_page import CartPage
 from pages.navbar_page import NavbarPage
@@ -5,6 +7,8 @@ from pages.product_page import ProductPage
 from pages.products_page import ProductsPage
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_product_is_displayed_in_products_table(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
@@ -44,6 +48,8 @@ def test_product_is_displayed_in_products_table(test_driver, base_url):
     assert test_product.price == 360
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_product_page_details_match_cart_page_details(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
@@ -111,6 +117,8 @@ def test_product_page_details_match_cart_page_details(test_driver, base_url):
     assert monitor_product.price == monitor_product_row.price
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_total_cart_price_matches_products_total_price(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
@@ -169,6 +177,8 @@ def test_total_cart_price_matches_products_total_price(test_driver, base_url):
     assert total_products_table_price == cart_total_price
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
@@ -248,6 +258,8 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     assert cart_total_price_updated == expected_cart_price_after_deleting_product
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_can_place_order_succesfully(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)

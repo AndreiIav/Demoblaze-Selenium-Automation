@@ -3,7 +3,6 @@ import os
 from collections import namedtuple
 from dataclasses import dataclass
 
-import allure
 import pytest
 from selenium import webdriver
 
@@ -29,11 +28,6 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="session")
 def run_on_selenium_grid(request):
     return request.config.getoption("--selenium_grid")
-
-
-@pytest.fixture(scope="session")
-def browser_name(request):
-    return request.config.getoption("--browser")
 
 
 @pytest.fixture(scope="session")
@@ -138,18 +132,3 @@ def get_products_json_data():
             expected_products_data[expected_product_name].append(prod)
 
     return expected_products_data
-
-
-@pytest.fixture(autouse=True)
-def add_browser_label(request):
-    browser = request.config.getoption("--browser")
-    allure.dynamic.label("browser", browser)
-    allure.dynamic.tag(browser)
-
-
-def pytest_collection_modifyitems(config, items):
-    browser = config.getoption("--browser")
-    for item in items:
-        # Add browser name to the test name
-        item.name = f"{item.name} [{browser}]"
-        item._nodeid = f"{item.nodeid} [{browser}]"

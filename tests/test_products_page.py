@@ -1,7 +1,10 @@
+import allure
 import pytest
 from pages.products_page import ProductsPage
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 def test_all_cards_are_visible_on_start_page(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     test_driver.get(base_url)
@@ -18,6 +21,8 @@ expected_product_type_with_app_category_button = [
 ]
 
 
+@pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
+@allure.title("test_login_valid_credentials in {browser_name}")
 @pytest.mark.parametrize(
     "expected_product_type_and_category", expected_product_type_with_app_category_button
 )
