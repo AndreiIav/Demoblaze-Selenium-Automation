@@ -11,7 +11,7 @@ products_with_category = [
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_product_details_match_card_details in {browser_name}")
 @pytest.mark.parametrize("products_and_category", products_with_category)
 def test_product_details_match_card_details(
     test_driver, base_url, products_and_category
@@ -36,7 +36,7 @@ def test_product_details_match_card_details(
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_add_product_to_cart in {browser_name}")
 def test_add_product_to_cart(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)

@@ -23,7 +23,7 @@ def test_login_valid_credentials(test_driver, user_credentials, base_url):
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_login_with_missing_credentials in {browser_name}")
 def test_login_with_missing_credentials(test_driver, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
@@ -39,7 +39,7 @@ def test_login_with_missing_credentials(test_driver, base_url):
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_login_with_wrong_password in {browser_name}")
 def test_login_with_wrong_password(test_driver, base_url, user_credentials):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
@@ -56,7 +56,7 @@ def test_login_with_wrong_password(test_driver, base_url, user_credentials):
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_login_with_inexistent_user in {browser_name}")
 def test_login_with_inexistent_user(test_driver, base_url):
     login_page = LoginPage(test_driver)
     navbar_page = NavbarPage(test_driver)
@@ -74,7 +74,7 @@ def test_login_with_inexistent_user(test_driver, base_url):
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_successful_login_after_initial_failed_attempt in {browser_name}")
 def test_successful_login_after_initial_failed_attempt(
     test_driver, base_url, user_credentials
 ):

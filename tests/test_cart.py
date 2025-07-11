@@ -8,7 +8,7 @@ from pages.products_page import ProductsPage
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_product_is_displayed_in_products_table in {browser_name}")
 def test_product_is_displayed_in_products_table(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
@@ -49,7 +49,7 @@ def test_product_is_displayed_in_products_table(test_driver, base_url):
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_product_page_details_match_cart_page_details in {browser_name}")
 def test_product_page_details_match_cart_page_details(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
@@ -118,7 +118,7 @@ def test_product_page_details_match_cart_page_details(test_driver, base_url):
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_total_cart_price_matches_products_total_price in {browser_name}")
 def test_total_cart_price_matches_products_total_price(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
@@ -178,7 +178,7 @@ def test_total_cart_price_matches_products_total_price(test_driver, base_url):
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_total_cart_price_drops_after_deleting_product in {browser_name}")
 def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
@@ -259,7 +259,7 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
-@allure.title("test_login_valid_credentials in {browser_name}")
+@allure.title("test_can_place_order_succesfully in {browser_name}")
 def test_can_place_order_succesfully(test_driver, base_url):
     products_page = ProductsPage(test_driver)
     product_page = ProductPage(test_driver)
