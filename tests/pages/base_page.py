@@ -17,7 +17,7 @@ class BasePage:
         element = self.wait.until(EC.visibility_of_element_located(locator))
         return element
 
-    def get_clickabale_element(
+    def get_clickable_element(
         self, locator: tuple[str, str] | WebElement
     ) -> WebElement:
         clickable_element = self.wait.until(EC.element_to_be_clickable(locator))

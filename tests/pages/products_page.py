@@ -45,7 +45,7 @@ class ProductsPage(BasePage):
         else:
             raise ValueError(f"'{category_button}' is not a valid categories button.")
 
-        phones_button = self.get_clickabale_element(locator=category_selector)
+        phones_button = self.get_clickable_element(locator=category_selector)
         phones_button.click()
 
     def get_all_cards_on_page(self) -> list[WebElement]:

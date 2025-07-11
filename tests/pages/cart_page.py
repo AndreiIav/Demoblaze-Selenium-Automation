@@ -171,7 +171,7 @@ class CartPage(BasePage):
             )
 
     def delete_product(self, element: WebElement) -> None:
-        product_delete_button = self.get_clickabale_element(locator=element)
+        product_delete_button = self.get_clickable_element(locator=element)
         product_delete_button.click()
         self.wait_for_element_to_get_stale(element=element)
         return
@@ -181,9 +181,7 @@ class CartPage(BasePage):
         return float(cart_total_price)
 
     def click_place_order_button(self) -> None:
-        place_order_button = self.get_clickabale_element(
-            locator=self.PLACE_ORDER_BUTTON
-        )
+        place_order_button = self.get_clickable_element(locator=self.PLACE_ORDER_BUTTON)
         place_order_button.click()
         return
 
@@ -331,7 +329,7 @@ class CartPage(BasePage):
         return confirmation_prompt_data_object
 
     def click_confirmation_prompt_ok_button(self) -> None:
-        confirmation_prompt_ok_button = self.get_clickabale_element(
+        confirmation_prompt_ok_button = self.get_clickable_element(
             self.CONFIRMATION_PROMPT_OK_BUTTON
         )
         confirmation_prompt_ok_button.click()
