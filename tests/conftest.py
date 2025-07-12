@@ -34,7 +34,7 @@ def is_headless(request):
     return request.config.getoption("--headless")
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def browser_option(browser_name, is_headless):
     if browser_name == "chrome":
         options = webdriver.ChromeOptions()
@@ -52,7 +52,7 @@ def browser_option(browser_name, is_headless):
         return options
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def test_driver(browser_name, browser_option, run_on_selenium_grid):
     if run_on_selenium_grid:
         if browser_name in ("chrome", "firefox"):
@@ -79,20 +79,20 @@ def test_driver(browser_name, browser_option, run_on_selenium_grid):
     driver.quit()
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def user_credentials():
     User = namedtuple("User", ["username", "password"])
     user = User(username="abc_12", password="abc")
     return user
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def base_url():
     base_url = "https://www.demoblaze.com/"
     return base_url
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def expected_products():
     expected_products_data = parse_products_json_data()
     return expected_products_data
