@@ -36,14 +36,16 @@ class ProductsPage(BasePage):
         super().__init__(driver)
 
     def click_categories_button(self, category_button: str) -> None:
-        if category_button == "phones":
-            category_selector = self.PHONES
-        elif category_button == "laptops":
-            category_selector = self.LAPTOPS
-        elif category_button == "monitors":
-            category_selector = self.MONITORS
-        else:
-            raise ValueError(f"'{category_button}' is not a valid categories button.")
+        CATEGORY_BUTTONS = {
+            "phones": self.PHONES,
+            "laptops": self.LAPTOPS,
+            "monitors": self.MONITORS,
+        }
+
+        try:
+            category_selector = CATEGORY_BUTTONS[category_button]
+        except KeyError:
+            raise KeyError(f"{category_button} is not a valid category button")
 
         phones_button = self.get_clickable_element(locator=category_selector)
         phones_button.click()

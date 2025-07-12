@@ -23,12 +23,16 @@ class NavbarPage(BasePage):
         super().__init__(driver)
 
     def click_button(self, button: str) -> None:
-        if button == "cart":
-            locator = self.CART_BUTTON
-        elif button == "home":
-            locator = self.HOME_BUTTON
-        elif button == "log in":
-            locator = self.LOG_IN_BUTTON
+        BUTTONS = {
+            "cart": self.CART_BUTTON,
+            "home": self.HOME_BUTTON,
+            "log in": self.LOG_IN_BUTTON,
+        }
+
+        try:
+            locator = BUTTONS[button]
+        except KeyError:
+            raise KeyError(f"'{button}' is not a valid navbar button")
 
         b = self.get_element(locator=locator)
         b.click()
