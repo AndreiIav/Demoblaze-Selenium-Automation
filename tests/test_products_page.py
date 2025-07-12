@@ -29,10 +29,10 @@ expected_product_type_with_app_category_button = [
     "expected_product_type_and_category", expected_product_type_with_app_category_button
 )
 def test_expected_products_are_displayed_with_all_expected_details(
-    test_driver, base_url, get_products_json_data, expected_product_type_and_category
+    test_driver, base_url, expected_products, expected_product_type_and_category
 ):
     expected_product_type, category_button = expected_product_type_and_category
-    expected_products = get_products_json_data[expected_product_type]
+    expected_products = expected_products[expected_product_type]
     products_page = ProductsPage(test_driver)
     test_driver.get(base_url)
 
