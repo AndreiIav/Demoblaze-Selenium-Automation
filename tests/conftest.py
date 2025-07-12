@@ -31,22 +31,22 @@ def run_on_selenium_grid(request):
 
 
 @pytest.fixture(scope="session")
-def is_headeless(request):
+def is_headless(request):
     return request.config.getoption("--headless")
 
 
 @pytest.fixture
-def browser_option(browser_name, is_headeless):
+def browser_option(browser_name, is_headless):
     if browser_name == "chrome":
         options = webdriver.ChromeOptions()
-        if is_headeless:
+        if is_headless:
             options.add_argument("--headless=new")
         options.add_argument("--window-size=1920,1080")
         return options
 
     elif browser_name == "firefox":
         options = webdriver.FirefoxOptions()
-        if is_headeless:
+        if is_headless:
             options.add_argument("--headless")
         options.add_argument("--width=1920")
         options.add_argument("--height=1080")

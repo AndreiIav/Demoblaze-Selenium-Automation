@@ -20,6 +20,8 @@ def test_product_is_displayed_in_products_table(test_driver, base_url):
     )
     test_product_name = "Samsung galaxy s6"
     test_product_category = "phones"
+    test_product_link = "https://www.demoblaze.com/imgs/galaxy_s6.jpg"
+    test_product_price = 360
 
     # add test product to cart
     product_to_cart_flow.add_product_to_cart(
@@ -43,9 +45,9 @@ def test_product_is_displayed_in_products_table(test_driver, base_url):
     test_product = cart_page.get_product_card(
         all_cards=product_rows_cards, product_name=test_product_name
     )
-    assert test_product.image_link == "https://www.demoblaze.com/imgs/galaxy_s6.jpg"
-    assert test_product.title == "Samsung galaxy s6"
-    assert test_product.price == 360
+    assert test_product.image_link == test_product_link
+    assert test_product.title == test_product_name
+    assert test_product.price == test_product_price
 
 
 @pytest.mark.parametrize("browser_name", ["chrome", "firefox"])
