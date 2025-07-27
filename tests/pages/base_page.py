@@ -82,3 +82,7 @@ class BasePage:
     def clear_field(self, field_locator: tuple[str, str]) -> None:
         field = self.get_element(locator=field_locator)
         field.clear()
+
+    def click_button(self, locator: tuple[str, str] | WebElement) -> None:
+        button = self.get_clickable_element(locator=locator)
+        button.click()

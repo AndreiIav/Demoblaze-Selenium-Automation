@@ -29,7 +29,7 @@ def test_product_is_displayed_in_products_table(test_driver, base_url):
     )
 
     # go to Cart page
-    navbar_page.click_button(button="cart")
+    navbar_page.click_navbar_button(button="cart")
 
     # check that the products table is displayed with the correct headers
     assert cart_page.get_product_table_header_text(header="picture") == "Pic"
@@ -76,7 +76,7 @@ def test_product_page_details_match_cart_page_details(test_driver, base_url):
     )
 
     # go to Home page
-    navbar_page.click_button(button="home")
+    navbar_page.click_navbar_button(button="home")
 
     laptop_product = product_to_cart_flow.add_product_to_cart_and_get_product(
         category_button=laptop_test_product_category,
@@ -84,7 +84,7 @@ def test_product_page_details_match_cart_page_details(test_driver, base_url):
     )
 
     # go to Home page
-    navbar_page.click_button(button="home")
+    navbar_page.click_navbar_button(button="home")
 
     # add monitor
     monitor_product = product_to_cart_flow.add_product_to_cart_and_get_product(
@@ -93,7 +93,7 @@ def test_product_page_details_match_cart_page_details(test_driver, base_url):
     )
 
     # go to Cart page
-    navbar_page.click_button(button="cart")
+    navbar_page.click_navbar_button(button="cart")
 
     # get all products from products table
     product_rows = cart_page.get_all_product_rows()
@@ -146,7 +146,7 @@ def test_total_cart_price_matches_products_total_price(test_driver, base_url):
     )
 
     # go to Home page
-    navbar_page.click_button(button="home")
+    navbar_page.click_navbar_button(button="home")
 
     # add laptop
     product_to_cart_flow.add_product_to_cart(
@@ -154,7 +154,7 @@ def test_total_cart_price_matches_products_total_price(test_driver, base_url):
         product_name=laptop_test_product_name,
     )
     # go to Home page
-    navbar_page.click_button(button="home")
+    navbar_page.click_navbar_button(button="home")
 
     # add monitor
     product_to_cart_flow.add_product_to_cart(
@@ -163,7 +163,7 @@ def test_total_cart_price_matches_products_total_price(test_driver, base_url):
     )
 
     # go to Cart page
-    navbar_page.click_button(button="cart")
+    navbar_page.click_navbar_button(button="cart")
 
     # get all products from products table
     product_rows = cart_page.get_all_product_rows()
@@ -206,7 +206,7 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     )
 
     # go to Home page
-    navbar_page.click_button(button="home")
+    navbar_page.click_navbar_button(button="home")
 
     # add laptop
     product_to_cart_flow.add_product_to_cart(
@@ -215,7 +215,7 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     )
 
     # go to Home page
-    navbar_page.click_button(button="home")
+    navbar_page.click_navbar_button(button="home")
 
     # add monitor
     product_to_cart_flow.add_product_to_cart(
@@ -224,7 +224,7 @@ def test_total_cart_price_drops_after_deleting_product(test_driver, base_url):
     )
 
     # go to Cart page
-    navbar_page.click_button(button="cart")
+    navbar_page.click_navbar_button(button="cart")
 
     # get all products from products table
     product_rows = cart_page.get_all_product_rows()
@@ -296,7 +296,7 @@ def test_can_place_order_succesfully(test_driver, base_url):
     )
 
     # go to Home page
-    navbar_page.click_button(button="home")
+    navbar_page.click_navbar_button(button="home")
 
     # add laptop
     product_to_cart_flow.add_product_to_cart(
@@ -305,7 +305,7 @@ def test_can_place_order_succesfully(test_driver, base_url):
     )
 
     # go to Home page
-    navbar_page.click_button(button="home")
+    navbar_page.click_navbar_button(button="home")
 
     # add monitor
     product_to_cart_flow.add_product_to_cart(
@@ -314,7 +314,7 @@ def test_can_place_order_succesfully(test_driver, base_url):
     )
 
     # go to Cart page
-    navbar_page.click_button(button="cart")
+    navbar_page.click_navbar_button(button="cart")
 
     # Fill Order details
     cart_page.get_place_order_modal()

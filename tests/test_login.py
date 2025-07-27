@@ -12,7 +12,7 @@ def test_login_valid_credentials(test_driver, user_credentials, base_url):
     test_driver.get(base_url)
     expected_logged_in_user_text = f"Welcome {user_credentials.username}"
 
-    navbar_page.click_button(button="log in")
+    navbar_page.click_navbar_button(button="log in")
     login_page.get_log_in_modal()
     login_page.login(
         username=user_credentials.username, password=user_credentials.password
@@ -30,7 +30,7 @@ def test_login_with_missing_credentials(test_driver, base_url):
     test_driver.get(base_url)
     expected_alert_text = "Please fill out Username and Password."
 
-    navbar_page.click_button(button="log in")
+    navbar_page.click_navbar_button(button="log in")
     login_page.get_log_in_modal()
     login_page.click_log_in()
     alert_text = login_page.get_alert_text()
@@ -47,7 +47,7 @@ def test_login_with_wrong_password(test_driver, base_url, user_credentials):
     test_wrong_password = "fake password"
     expected_alert_text = "Wrong password"
 
-    navbar_page.click_button(button="log in")
+    navbar_page.click_navbar_button(button="log in")
     login_page.get_log_in_modal()
     login_page.login(username=user_credentials.username, password=test_wrong_password)
     alert_text = login_page.get_alert_text()
@@ -65,7 +65,7 @@ def test_login_with_inexistent_user(test_driver, base_url):
     test_wrong_password = "fake password"
     expected_alert_text = "User does not exist"
 
-    navbar_page.click_button(button="log in")
+    navbar_page.click_navbar_button(button="log in")
     login_page.get_log_in_modal()
     login_page.login(username=test_inexistent_user, password=test_wrong_password)
     alert_text = login_page.get_alert_text()
@@ -85,7 +85,7 @@ def test_successful_login_after_initial_failed_attempt(
     test_inexistent_user = "lsfjdsjdfosidufksmdfls!!!!"
     test_wrong_password = "fake password"
 
-    navbar_page.click_button(button="log in")
+    navbar_page.click_navbar_button(button="log in")
     login_page.get_log_in_modal()
     login_page.login(username=test_inexistent_user, password=test_wrong_password)
     login_page.accept_alert()

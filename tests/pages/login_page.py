@@ -24,8 +24,7 @@ class LoginPage(BasePage):
         self.clear_field(field_locator=self.USERNAME)
 
     def click_log_in(self) -> None:
-        log_in_button = self.get_element(self.MODAL_LOG_IN_BUTTON)
-        log_in_button.click()
+        self.click_button(locator=self.MODAL_LOG_IN_BUTTON)
 
     def get_logged_in_user_text(self) -> str:
         self.get_element(locator=self.LOGGED_IN_USER)

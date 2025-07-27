@@ -171,8 +171,7 @@ class CartPage(BasePage):
             )
 
     def delete_product(self, element: WebElement) -> None:
-        product_delete_button = self.get_clickable_element(locator=element)
-        product_delete_button.click()
+        self.click_button(locator=element)
         self.wait_for_element_to_get_stale(element=element)
         return
 
@@ -181,8 +180,7 @@ class CartPage(BasePage):
         return float(cart_total_price)
 
     def click_place_order_button(self) -> None:
-        place_order_button = self.get_clickable_element(locator=self.PLACE_ORDER_BUTTON)
-        place_order_button.click()
+        self.click_button(locator=self.PLACE_ORDER_BUTTON)
         return
 
     def get_place_order_modal(self) -> None:
@@ -230,13 +228,11 @@ class CartPage(BasePage):
         self.set_field_value(field_locator=self.ORDER_MODAL_YEAR, field_value=year)
 
     def close_place_order_modal(self) -> None:
-        close_button = self.get_element(locator=self.ORDER_MODAL_CLOSE_BUTTON)
-        close_button.click()
+        self.click_button(locator=self.ORDER_MODAL_CLOSE_BUTTON)
         return
 
     def purchase_order(self) -> None:
-        purchase_btton = self.get_element(locator=self.ORDER_MODAL_PURCHASE_BUTTON)
-        purchase_btton.click()
+        self.click_button(locator=self.ORDER_MODAL_PURCHASE_BUTTON)
         return
 
     def get_confirmation_prompt(self) -> WebElement:
@@ -325,8 +321,5 @@ class CartPage(BasePage):
         return confirmation_prompt_data_object
 
     def click_confirmation_prompt_ok_button(self) -> None:
-        confirmation_prompt_ok_button = self.get_clickable_element(
-            self.CONFIRMATION_PROMPT_OK_BUTTON
-        )
-        confirmation_prompt_ok_button.click()
+        self.click_button(self.CONFIRMATION_PROMPT_OK_BUTTON)
         return

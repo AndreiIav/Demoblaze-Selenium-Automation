@@ -43,8 +43,7 @@ class ProductPage(BasePage):
         return product_description
 
     def click_add_to_cart_button(self) -> None:
-        add_to_cart_button = self.get_element(self.ADD_TO_CART_BUTTON)
-        add_to_cart_button.click()
+        self.click_button(locator=self.ADD_TO_CART_BUTTON)
 
     def create_product(self) -> Product:
         """Creates Product objects"""

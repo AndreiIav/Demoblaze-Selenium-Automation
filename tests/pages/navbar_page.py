@@ -22,7 +22,7 @@ class NavbarPage(BasePage):
     def __init__(self, driver: WebDriver) -> None:
         super().__init__(driver)
 
-    def click_button(self, button: str) -> None:
+    def click_navbar_button(self, button: str) -> None:
         BUTTONS = {
             "cart": self.CART_BUTTON,
             "home": self.HOME_BUTTON,
@@ -34,5 +34,4 @@ class NavbarPage(BasePage):
         except KeyError:
             raise KeyError(f"'{button}' is not a valid navbar button")
 
-        b = self.get_element(locator=locator)
-        b.click()
+        self.click_button(locator=locator)

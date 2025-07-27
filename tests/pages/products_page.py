@@ -47,8 +47,7 @@ class ProductsPage(BasePage):
         except KeyError:
             raise KeyError(f"{category_button} is not a valid category button")
 
-        phones_button = self.get_clickable_element(locator=category_selector)
-        phones_button.click()
+        self.click_button(locator=category_selector)
 
     def get_all_cards_on_page(self) -> list[WebElement]:
         all_cards = self.get_all_elements(self.CARD)
@@ -89,8 +88,7 @@ class ProductsPage(BasePage):
         return card_description
 
     def click_product_link(self, product_name: str) -> None:
-        product_link = self.get_element(locator=(By.LINK_TEXT, product_name))
-        product_link.click()
+        self.click_button(locator=(By.LINK_TEXT, product_name))
 
     def create_products_cards(self, cards: list[WebElement]) -> list[ProductCard]:
         """Creates ProductCard objects from the data passsed in cards argument"""
