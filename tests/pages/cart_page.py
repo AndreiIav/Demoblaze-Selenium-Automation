@@ -209,10 +209,6 @@ class CartPage(BasePage):
             f" and cast to a float after {retries} retries"
         )
 
-    def set_field_value(self, field_locator: tuple[str, str], field_value: str) -> None:
-        field = self.get_element(locator=field_locator)
-        field.send_keys(field_value)
-
     def fill_place_order_modal_fields(
         self,
         name: str = "Jonh Smith",

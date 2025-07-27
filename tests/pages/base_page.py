@@ -74,3 +74,7 @@ class BasePage:
     def accept_alert(self) -> None:
         alert = self.get_alert()
         alert.accept()
+
+    def set_field_value(self, field_locator: tuple[str, str], field_value: str) -> None:
+        field = self.get_element(locator=field_locator)
+        field.send_keys(field_value)

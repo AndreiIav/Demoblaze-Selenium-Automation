@@ -19,10 +19,6 @@ class LoginPage(BasePage):
         self.get_element(self.LOG_IN_MODAL)
         return
 
-    def fill_field(self, field_locator: tuple[str, str], field_value: str) -> None:
-        field = self.get_element(locator=field_locator)
-        field.send_keys(field_value)
-
     def clear_field(self, field_locator: tuple[str, str]) -> None:
         field = self.get_element(locator=field_locator)
         field.clear()
@@ -42,8 +38,8 @@ class LoginPage(BasePage):
         return logged_in_user
 
     def login(self, username: str, password: str) -> None:
-        self.fill_field(field_locator=self.USERNAME, field_value=username)
-        self.fill_field(field_locator=self.PASSWORD, field_value=password)
+        self.set_field_value(field_locator=self.USERNAME, field_value=username)
+        self.set_field_value(field_locator=self.PASSWORD, field_value=password)
         self.click_log_in()
 
     def log_out(self) -> None:
