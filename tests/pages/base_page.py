@@ -78,3 +78,7 @@ class BasePage:
     def set_field_value(self, field_locator: tuple[str, str], field_value: str) -> None:
         field = self.get_element(locator=field_locator)
         field.send_keys(field_value)
+
+    def clear_field(self, field_locator: tuple[str, str]) -> None:
+        field = self.get_element(locator=field_locator)
+        field.clear()

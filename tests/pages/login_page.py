@@ -19,10 +19,6 @@ class LoginPage(BasePage):
         self.get_element(self.LOG_IN_MODAL)
         return
 
-    def clear_field(self, field_locator: tuple[str, str]) -> None:
-        field = self.get_element(locator=field_locator)
-        field.clear()
-
     def clear_login_fields(self) -> None:
         self.clear_field(field_locator=self.PASSWORD)
         self.clear_field(field_locator=self.USERNAME)
