@@ -129,7 +129,7 @@ class ProductsPage(BasePage):
         self, all_cards: list[ProductCard], product_name: str
     ) -> ProductCard:
         """
-        Returns a single ProductCard object or raises a LookupError if the name
+        Returns a single ProductCard object or raises a ValueError if the name
         is not found.
 
         Args:
@@ -140,6 +140,6 @@ class ProductsPage(BasePage):
             card = next(c for c in all_cards if c.title == product_name)
             return card
         except StopIteration:
-            raise LookupError(
-                f"'{product_name}' product can not be found in all_cards."
+            raise ValueError(
+                f"'{product_name}' product can not be found in: {[c.title for c in all_cards]}."
             )

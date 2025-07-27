@@ -20,7 +20,7 @@ class ProductRowCard:
 
 @dataclass
 class ConfirmationPromptData:
-    """Represents the conformation prompt details for an order"""
+    """Represents the confirmation prompt details for an order"""
 
     order_id_raw: str
     # store the numerical part of id
@@ -155,7 +155,7 @@ class CartPage(BasePage):
         self, all_cards: list[ProductRowCard], product_name: str
     ) -> ProductRowCard:
         """
-        Returns a single ProductCard object or raises a LookupError if the name
+        Returns a single ProductCard object or raises a ValueError if the name
         is not found.
 
         Args:
@@ -166,8 +166,8 @@ class CartPage(BasePage):
             card = next(c for c in all_cards if c.title == product_name)
             return card
         except StopIteration:
-            raise LookupError(
-                f"'{product_name}' product can not be found in all_cards."
+            raise ValueError(
+                f"'{product_name}' product can not be found in {[c.title for c in all_cards]}."
             )
 
     def delete_product(self, element: WebElement) -> None:
