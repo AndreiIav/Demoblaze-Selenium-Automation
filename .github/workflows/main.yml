@@ -25,7 +25,7 @@ jobs:
       run: uv python install
 
     - name: Install dependencies
-      run: uv add allure-pytest
+      run: uv sync
 
     - name: Build Docker images
       run: docker compose -f docker-compose.yml build
