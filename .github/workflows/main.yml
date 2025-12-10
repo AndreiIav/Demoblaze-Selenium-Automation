@@ -16,6 +16,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install UV
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: "0.7.15"
+
+    - name: Set up Python
+      run: uv python install
+
+    - name: Install dependencies
+      run: uv add allure-pytest
+
     - name: Build Docker images
       run: docker compose -f docker-compose.yml build
 
